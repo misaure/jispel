@@ -14,21 +14,21 @@ import com.msaure.jispel.memory.SpecialValue;
 import java.io.Reader;
 
 /**
- This class acts as facade for the various components making up a complete
- interpreter. All commonly used methods of the various components are
- exported as methods of the Interpreter class, so this class acts as the
- interpreters high-level API. To get deeper inside the interpreter's
- internal, the components actually making up the interpreter can be accessed
- directly, thus giving access to the low-level APIs.<p>
-
- All of the interpreter's components are exchangeable with alternative
- implementations. To determine what component types will actually be used,
- you can pass a ComponentFactory to the interpreter's constructor. All
- components used by the interpreter will be created using that factory
- object. If you don't specify any factory object, an instance of the
- DefaultComponentFactory will be used.
-
- @version 0.1
+ * This class acts as facade for the various components making up a complete
+ * interpreter. All commonly used methods of the various components are
+ * exported as methods of the Interpreter class, so this class acts as the
+ * interpreters high-level API. To get deeper inside the interpreter's
+ * internal, the components actually making up the interpreter can be accessed
+ * directly, thus giving access to the low-level APIs.
+ * 
+ * <p>All of the interpreter's components are exchangeable with alternative
+ * implementations. To determine what component types will actually be used,
+ * you can pass a ComponentFactory to the interpreter's constructor. All
+ * components used by the interpreter will be created using that factory
+ * object. If you don't specify any factory object, an instance of the
+ * DefaultComponentFactory will be used.</p>
+ * 
+ * @version 0.1
  */
 public class Interpreter {
 
@@ -51,6 +51,7 @@ public class Interpreter {
      repl is an acronym for 'Read-Eval-Print loop'. This method reads and
      executes a Lispel program read from the given stream until either an
      end-of-file occurs or the program is explicitly halted.
+     * 
      @param scriptSource The stream from which the program should be read.
      @return false if an error occured, true else.
      */

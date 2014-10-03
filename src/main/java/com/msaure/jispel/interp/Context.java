@@ -6,11 +6,6 @@ import com.msaure.jispel.eval.Evaluator;
 import com.msaure.jispel.memory.Handle;
 import com.msaure.jispel.memory.NodeFactory;
 
-/**
- * User: msaure
- * Date: 13.07.13
- * Time: 14:55
- */
 public class Context {
     public NodeFactory factory;
     public Environment toplevel;
