@@ -20,10 +20,12 @@ public class LexBufferTest {
         assertEquals("", buffer.toString());
         assertEquals(0, buffer.size());
         assertEquals(BUFFER_SIZE, buffer.getMaxSize());
+        assertEquals("", buffer.toString());
     }
     
     @Test
     public void thatAppendingASingleCharacterWorks() {
         
     }
+
 }

@@ -44,6 +44,24 @@ public class Interpreter {
     }
 
     public Interpreter(ComponentFactory factory) {
+        ctx.toplevel = factory.createToplevelEnvironment();
+        ctx.factory = factory.getGlobalNodeFactory( ctx, 65535);
+        ctx.eval = factory.createEvaluator( ctx);
+        ctx.interp = this;
+        // TODO ctx.NIL = ctx.factory.makeNil();
+        ctx.TRUE = ctx.factory.makeBoolean( true);
+        ctx.FALSE = ctx.factory.makeBoolean( false);
+        gc = factory.createGC( ctx);
+
+        ctx.NIL.setFlag( Handle.GCSAFEFLAG);
+        ctx.TRUE.setFlag( Handle.GCSAFEFLAG);
+        ctx.FALSE.setFlag( Handle.GCSAFEFLAG);
+
+        if (!LEXER_INITIALIZED) {
+            // TODO initLexerModule();
+            LEXER_INITIALIZED = true;
+        }
+        exitRequested = gcRequested = false;
 
     }
 

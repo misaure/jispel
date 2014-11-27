@@ -39,6 +39,12 @@ public class Handle {
 
     protected Handle(NodeType nodeType) {
         this.nodeType = nodeType;
+        this.flags = 0;
+        this.refCount = 0;
+    }
+
+    public Handle() {
+        this(NodeType.EMPTY);
     }
 
     public NodeType type() {
@@ -51,6 +57,10 @@ public class Handle {
 
     public void setFlag(int f) {
         this.flags |= f;
+    }
+
+    public int getFlags() {
+        return this.flags;
     }
 
     public boolean hasType(NodeType t) {
