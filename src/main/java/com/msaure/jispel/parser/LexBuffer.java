@@ -1,14 +1,20 @@
 package com.msaure.jispel.parser;
 
 public class LexBuffer {
+
+    public static final int DEFAULT_BUFFER_SIZE = 1024;
     
     private int pos;
     private int maxSize;
     private char[] buffer;
+
+    public LexBuffer() {
+        this(DEFAULT_BUFFER_SIZE);
+    }
     
-  /**
-     Create a read buffer capable of holding the given number of characters.
-  */
+    /**
+     * Create a read buffer capable of holding the given number of characters.
+     */
     public LexBuffer(int maxSize) {
         this.maxSize = maxSize;
         this.pos = 0;
@@ -22,8 +28,12 @@ public class LexBuffer {
     public void append(char c) {
         buffer[pos++] = c;
     }
-    
-    public void unget() {
+
+    //public int getMaxSize() {
+    //    return this.buffer.length;
+    //}
+
+    public void ungetc() {
         if (pos > 0) {
             --pos;
             buffer[pos] = '\0';

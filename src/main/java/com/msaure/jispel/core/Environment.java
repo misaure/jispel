@@ -17,9 +17,9 @@ import java.util.Set;
  */
 public class Environment {
 
-    protected static Set<Environment> ENVS = new HashSet<Environment>();
+    protected static Set<Environment> ENVS = new HashSet<>();
 
-    private Map<String,Handle> entries = new HashMap<String,Handle>();
+    private final Map<String,Handle> entries = new HashMap<>();
     private Environment parent;
     
     public Environment() {

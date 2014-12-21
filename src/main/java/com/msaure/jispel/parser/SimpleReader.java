@@ -7,31 +7,43 @@ import java.io.Reader;
 
 public class SimpleReader implements LispelReader {
 
-    private NodeFactory nodeFactory;
+    private final Context ctx;
+    private final NodeFactory nodeFactory;
     private Token currentToken;
-    private int indent;
-    private Context ctx;
-    
-    @Override
-    public Handle read(Reader stream) {
-        assert null != stream;
-        
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+    /**
+     Initialize a reader to use a certain NodeFactory instance. A node factory
+     objects is a kind of memory cell dispenser, in a classical lisp
+     implementation this would be e.g the heap. The default implementation
+     provided by this class implements a simple recursive descent parser. This
+     can, of course, be changed to some more efficient implementation by
+     subclassing the Reader class and passing the derived class to the
+     interpreter.
+     @param nodeFactory A NodeFactory instance which produces tagged memory
+     cells from tokens.
+     */
+    public SimpleReader(Context ctx, NodeFactory nodeFactory) {
+        this.ctx = ctx;
+        this.nodeFactory = nodeFactory;
     }
 
     @Override
-    public Handle readList(Reader stream) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Handle read(Reader r) {
+        return null;
     }
 
     @Override
-    public Handle readVector(Reader stream) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Handle readList(Reader r) {
+        return null;
     }
 
     @Override
-    public Handle readAtom(Reader stream) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Handle readVector(Reader r) {
+        return null;
+    }
+
+    @Override
+    public Handle readAtom(Reader r) {
+        return null;
     }
 }

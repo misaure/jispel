@@ -44,27 +44,47 @@ public class Interpreter {
     }
 
     public Interpreter(ComponentFactory factory) {
+        ctx.toplevel = factory.createToplevelEnvironment();
+        ctx.factory = factory.getGlobalNodeFactory( ctx, 65535);
+        ctx.eval = factory.createEvaluator( ctx);
+        ctx.interp = this;
+        // TODO ctx.NIL = ctx.factory.makeNil();
+        ctx.TRUE = ctx.factory.makeBoolean( true);
+        ctx.FALSE = ctx.factory.makeBoolean( false);
+        gc = factory.createGC( ctx);
+
+        ctx.NIL.setFlag( Handle.GCSAFEFLAG);
+        ctx.TRUE.setFlag( Handle.GCSAFEFLAG);
+        ctx.FALSE.setFlag( Handle.GCSAFEFLAG);
+
+        if (!LEXER_INITIALIZED) {
+            // TODO initLexerModule();
+            LEXER_INITIALIZED = true;
+        }
+        exitRequested = gcRequested = false;
 
     }
 
     /**
-     repl is an acronym for 'Read-Eval-Print loop'. This method reads and
-     executes a Lispel program read from the given stream until either an
-     end-of-file occurs or the program is explicitly halted.
+     * repl is an acronym for 'Read-Eval-Print loop'. This method reads and
+     * executes a Lispel program read from the given stream until either an
+     * end-of-file occurs or the program is explicitly halted.
      * 
-     @param scriptSource The stream from which the program should be read.
-     @return false if an error occured, true else.
+     * @param scriptSource The stream from which the program should be read.
+     * 
+     * @return false if an error occured, true else.
      */
     public boolean repl(Reader scriptSource, UserInterface ui) {
         throw new UnsupportedOperationException("not implemented");
     }
 
     /**
-     Load and execute a Lispel source file. If any exception occurs during
-     program execution it won't be caught by this method so that the user
-     code can more exactly determine the type of error.
-     @return true when loading and executing the program succeeded or false if
-     opening the input file failed.
+     * Load and execute a Lispel source file. If any exception occurs during
+     * program execution it won't be caught by this method so that the user
+     * code can more exactly determine the type of error.
+     * 
+     * @return true when loading and executing the program succeeded or false if
+     * opening the input file failed.
      */
 
     public boolean source(Reader scriptSource) {
@@ -72,9 +92,10 @@ public class Interpreter {
     }
 
     /**
-     Establish a variable binding in the global binding environment.
-     @param name Name under which the value will be available
-     @param value Can be any kind of valid memory cell.
+     * Establish a variable binding in the global binding environment.
+     * 
+     * @param name Name under which the value will be available
+     * @param value Can be any kind of valid memory cell.
      */
     public void toplevelDefine( String name, Handle value) {
 
@@ -82,6 +103,7 @@ public class Interpreter {
 
     /**
      Look up a value in the global binding environment.
+     * 
      @param name Name of the value to look up.
      @return A handle to the value stored with key or zero if no such value
      exists.
@@ -94,10 +116,13 @@ public class Interpreter {
      Add a new builtin to the interpreter. All builtins are defined in the
      toplevel binding environment and, in contrast to closures, don't keep
      an environment of their own as part of their data structure.
+     * 
      @param name Specifies the name for the new builtin. Any data already
      existing under the same name will be overwritten. So you might want
      to do a toplevelLookup first, before you add your new command.
+     * 
      @param cmdimpl A subclass of BuiltinValue implementing the new command.
+     * 
      @return A pointer to the memory cell allocated for the new command or
      0 if the operation failed.
      */

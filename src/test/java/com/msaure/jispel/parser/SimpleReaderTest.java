@@ -1,9 +1,12 @@
 package com.msaure.jispel.parser;
 
+import com.msaure.jispel.interp.Context;
 import com.msaure.jispel.memory.Handle;
 import java.io.Reader;
 import java.io.StringReader;
 import static org.junit.Assert.assertNotNull;
+
+import com.msaure.jispel.memory.NodeFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +16,9 @@ public class SimpleReaderTest {
     
     @Before
     public void setUp() {
-        this.reader = new SimpleReader();
+        Context ctx = null;
+        NodeFactory factory = null;
+        this.reader = new SimpleReader(ctx, factory);
     }
     
     @Test
