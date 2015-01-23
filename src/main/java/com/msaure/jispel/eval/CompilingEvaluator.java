@@ -8,12 +8,6 @@ package com.msaure.jispel.eval;
  as the VM  described in the document. The machine's internal data will
  only be moved to heap when it is really needed, that is, when closures and
  continuations are created.
- *
- * Created with IntelliJ IDEA.
- * User: msaure
- * Date: 13.07.13
- * Time: 12:54
- * To change this template use File | Settings | File Templates.
  */
-public class CompilingEvaluator {
+public class CompilingEvaluator implements Evaluator {
 }

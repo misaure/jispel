@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNotNull;
 
 import com.msaure.jispel.memory.NodeFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class SimpleReaderTest {
@@ -21,19 +22,19 @@ public class SimpleReaderTest {
         this.reader = new SimpleReader(ctx, factory);
     }
     
-    @Test
+    @Test @Ignore("pending feature")
     public void thatAnIntegerIsParsedCorrectly() {
         Handle h = this.reader.read(readerFromString("1234"));
         assertNotNull(h);
     }
     
-    @Test
+    @Test @Ignore("pending feature")
     public void thatBooleanTrueConstantIsParsedCorrectly() {
         Handle h = this.reader.read(readerFromString("#t"));
         assertNotNull(h);
     }
     
-    @Test
+    @Test @Ignore("pending feature")
     public void thatBooleanFalseConstantIsParsedCorrectly() {
         Handle h = this.reader.read(readerFromString("#f"));
         assertNotNull(h);

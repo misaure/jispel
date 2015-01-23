@@ -27,8 +27,8 @@ public class Environment {
     }
 
     /**
-     Create a new Environment instance with a given parent environment.
-     @param parent The parent environment.
+     * Create a new Environment instance with a given parent environment.
+     * @param parent The parent environment.
      */
     public Environment(Environment parent) {
         this.parent = parent;
@@ -36,9 +36,9 @@ public class Environment {
     }
 
     /**
-     Retrieve a value bound to the name given.
-     @param name Name to which a value is connected.
-     @return A value of end() when name doesn't exist.
+     * Retrieve a value bound to the name given.
+     * @param name Name to which a value is connected.
+     * @return A value of end() when name doesn't exist.
      */
     public Handle lookup(String name) {
         Environment current = this;
@@ -55,8 +55,8 @@ public class Environment {
     }
 
     /**
-     Checks if a named value exists.
-     @return true if a value is bound to name
+     * Checks if a named value exists.
+     * @return true if a value is bound to name
      */
     public boolean exists(String name) {
         Environment current = this;
@@ -73,37 +73,39 @@ public class Environment {
     }
 
     /**
-     Insert a named value to the environment.
+     * Insert a named value to the environment.
      */
     public void put(String name, Handle value) {
         this.entries.put(name, value);
     }
 
     /**
-     Removes all entries from the environment (not from parent environments).
+     * Removes all entries from the environment (not from parent environments).
      */
     public void clear() {
         this.entries.clear();
     }
 
     /**
-     Get the parent environment.
-     @return The parent environment.
+     * Get the parent environment.
+     * @return The parent environment.
      */
     public Environment getParent() {
         return this.parent;
     }
 
     /**
-     Create a new Environment instance which has the current Environment
-     instance as parent.
+     * Create a new Environment instance which has the current Environment
+     * instance as parent.
+     * 
+     * @todo rename to newChildEnvironment()
      */
     public Environment makeChildEnvironment() {
         return new Environment(this);
     }
 
     /**
-     Set the parent environment.
+     * Set the parent environment.
      */
     public void setParent(Environment parent) {
         this.parent = parent;

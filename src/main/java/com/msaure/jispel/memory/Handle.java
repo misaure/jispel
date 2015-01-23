@@ -71,7 +71,7 @@ public class Handle {
     }
 
     public boolean isNilRep() {
-        throw new UnsupportedOperationException("not implemented");
+        return false;
     }
 
     public Handle car() throws TypeException {

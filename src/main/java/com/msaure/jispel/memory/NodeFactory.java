@@ -27,9 +27,11 @@ public interface NodeFactory {
     Handle makeSet();
 
     Handle makeCons();
-    Handle makeCons(Handle car);
-    Handle makeCons(Handle car, Handle cdr);
+    Handle makeCons(Handle car) throws TypeException;
+    Handle makeCons(Handle car, Handle cdr) throws TypeException;
 
     Handle makeClosure(Collection<Handle> args, Environment env, Handle codeBody);
 
+    Handle makeNil();
+    
 }

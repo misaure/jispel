@@ -31,4 +31,11 @@ public class ConsHandle extends Handle {
     public void setCdr(Handle cdr) throws TypeException {
         this.cdr = cdr;
     }
+
+    @Override
+    public boolean isNilRep() {
+        return (null == car) && (null == cdr);
+    }
+    
+    
 }

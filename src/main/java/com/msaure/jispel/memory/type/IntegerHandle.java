@@ -9,6 +9,11 @@ public class IntegerHandle extends Handle {
     public IntegerHandle() {
         super(NodeType.INTEGER);
     }
+    
+    public IntegerHandle(int intValue) {
+        super(NodeType.INTEGER);
+        this.intValue = intValue;
+    }
 
     @Override
     public int integerValue() {

@@ -7,6 +7,15 @@ public class BooleanHandle extends Handle {
     private boolean boolValue;
     
     public BooleanHandle() {
-        super(NodeType.DOUBLE);
+        super(NodeType.BOOLEAN);
     }
+
+    public boolean isBoolValue() {
+        return boolValue;
+    }
+
+    public void setBoolValue(boolean boolValue) {
+        this.boolValue = boolValue;
+    }
+
 }

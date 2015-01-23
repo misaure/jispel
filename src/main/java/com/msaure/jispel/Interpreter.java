@@ -5,6 +5,7 @@ import com.msaure.jispel.eval.Evaluator;
 import com.msaure.jispel.gc.GarbageCollector;
 import com.msaure.jispel.interp.ComponentFactory;
 import com.msaure.jispel.interp.Context;
+import com.msaure.jispel.interp.DefaultComponentFactory;
 import com.msaure.jispel.interp.UserInterface;
 import com.msaure.jispel.memory.BuiltinValue;
 import com.msaure.jispel.memory.Handle;
@@ -40,22 +41,13 @@ public class Interpreter {
     private static Interpreter INSTANCE;
 
     public Interpreter() {
-
+        this(new DefaultComponentFactory());
     }
 
     public Interpreter(ComponentFactory factory) {
-        ctx.toplevel = factory.createToplevelEnvironment();
-        ctx.factory = factory.getGlobalNodeFactory( ctx, 65535);
-        ctx.eval = factory.createEvaluator( ctx);
-        ctx.interp = this;
-        // TODO ctx.NIL = ctx.factory.makeNil();
-        ctx.TRUE = ctx.factory.makeBoolean( true);
-        ctx.FALSE = ctx.factory.makeBoolean( false);
+        ctx = new Context(this, factory);
+        
         gc = factory.createGC( ctx);
-
-        ctx.NIL.setFlag( Handle.GCSAFEFLAG);
-        ctx.TRUE.setFlag( Handle.GCSAFEFLAG);
-        ctx.FALSE.setFlag( Handle.GCSAFEFLAG);
 
         if (!LEXER_INITIALIZED) {
             // TODO initLexerModule();
