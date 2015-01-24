@@ -3,6 +3,7 @@ package com.msaure.jispel.memory;
 import com.msaure.jispel.core.Environment;
 import com.msaure.jispel.memory.type.BooleanHandle;
 import com.msaure.jispel.memory.type.ConsHandle;
+import com.msaure.jispel.memory.type.SymbolHandle;
 import java.util.Collection;
 
 public class SimpleNodeFactory implements NodeFactory {
@@ -42,7 +43,7 @@ public class SimpleNodeFactory implements NodeFactory {
 
     @Override
     public Handle makeSymbol(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new SymbolHandle(name);
     }
 
     @Override

@@ -1,0 +1,11 @@
+/Users/msaure/Projekte/github/jispel/src/test/java/com/msaure/jispel/InterpreterTest.java
+/Users/msaure/Projekte/github/jispel/src/test/java/com/msaure/jispel/test/LispelAssert.java
+/Users/msaure/Projekte/github/jispel/src/test/java/com/msaure/jispel/memory/SimpleNodeFactoryTest.java
+/Users/msaure/Projekte/github/jispel/src/test/java/com/msaure/jispel/parser/SimpleReaderTest.java
+/Users/msaure/Projekte/github/jispel/src/test/java/com/msaure/jispel/memory/HandleTest.java
+/Users/msaure/Projekte/github/jispel/src/test/java/com/msaure/jispel/eval/IterativeEvaluatorTest.java
+/Users/msaure/Projekte/github/jispel/src/test/java/com/msaure/jispel/core/EnvironmentTest.java
+/Users/msaure/Projekte/github/jispel/src/test/java/com/msaure/jispel/interp/DefaultComponentFactoryTest.java
+/Users/msaure/Projekte/github/jispel/src/test/java/com/msaure/jispel/memory/type/ConsHandleTest.java
+/Users/msaure/Projekte/github/jispel/src/test/java/com/msaure/jispel/parser/LexBufferTest.java
+/Users/msaure/Projekte/github/jispel/src/test/java/com/msaure/jispel/InterpreterFixture.java

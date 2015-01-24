@@ -1,6 +1,7 @@
 package com.msaure.jispel.memory;
 
 import com.msaure.jispel.memory.type.ConsHandle;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -20,5 +21,13 @@ public class SimpleNodeFactoryTest {
         Handle h = factory.makeNil();
         assertNotNull(h);
         assertTrue(h instanceof ConsHandle);
+    }
+    
+    @Test
+    public void thatMakeSymbolReturnsValidSymbol() throws TypeException {
+        Handle h = factory.makeSymbol("mysym");
+        assertNotNull(h);
+        assertTrue(h.hasType(Handle.NodeType.SYMBOL));
+        assertEquals("mysym", h.stringValue());
     }
 }

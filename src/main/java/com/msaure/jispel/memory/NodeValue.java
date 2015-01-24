@@ -3,17 +3,17 @@ package com.msaure.jispel.memory;
 import java.io.PrintStream;
 
 /**
- This is the base class for actually storing the data contained in a tagged
- memory cell. The base class makes provisions for reference counting as a
- generalization of boolean garbage collection tags.
+ * This is the base class for actually storing the data contained in a tagged
+ * memory cell. The base class makes provisions for reference counting as a
+ * generalization of boolean garbage collection tags.
  */
 public class NodeValue {
 
     /**
-     This method will be called by the garbage collector when the memory cell
-     referencing this data item will be disposed of. After calling this method
-     the destructor of the memory cell <i>might</i> be called. Whether this
-     happens or not depends on the actual gc implementation.
+     * This method will be called by the garbage collector when the memory cell
+     * referencing this data item will be disposed of. After calling this method
+     * the destructor of the memory cell <i>might</i> be called. Whether this
+     * happens or not depends on the actual gc implementation.
      */
     public void finalizeNode() {
 

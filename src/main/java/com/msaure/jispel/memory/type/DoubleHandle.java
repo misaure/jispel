@@ -9,6 +9,11 @@ public class DoubleHandle extends Handle {
     public DoubleHandle() {
         super(NodeType.DOUBLE);
     }
+
+    public DoubleHandle(double dblValue) {
+        super(NodeType.DOUBLE);
+        this.dblValue = dblValue;
+    }
     
     @Override
     public double doubleValue() {

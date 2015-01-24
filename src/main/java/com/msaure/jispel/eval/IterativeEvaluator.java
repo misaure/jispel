@@ -15,6 +15,7 @@ public class IterativeEvaluator implements Evaluator {
     public IterativeEvaluator(Context ctx) {
         this.ctx = ctx;
         this.envStack = new Stack<>();
+        this.envStack.push(ctx.toplevel);
     }
     
     /**
@@ -138,7 +139,7 @@ public class IterativeEvaluator implements Evaluator {
             throw new InternalInconsistencyException("eval stack corrupted");
         }
 
-        Handle valueNode = envStack.peek().lookup(node.stringValue());
+        final Handle valueNode = envStack.peek().lookup(node.stringValue());
 
         if (null == valueNode) {
             throw new UndefinedValueException(node.stringValue());

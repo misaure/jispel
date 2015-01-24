@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore("pending feature")
 public class SimpleReaderTest {
     
     private SimpleReader reader;
@@ -22,19 +23,19 @@ public class SimpleReaderTest {
         this.reader = new SimpleReader(ctx, factory);
     }
     
-    @Test @Ignore("pending feature")
+    @Test
     public void thatAnIntegerIsParsedCorrectly() {
         Handle h = this.reader.read(readerFromString("1234"));
         assertNotNull(h);
     }
     
-    @Test @Ignore("pending feature")
+    @Test
     public void thatBooleanTrueConstantIsParsedCorrectly() {
         Handle h = this.reader.read(readerFromString("#t"));
         assertNotNull(h);
     }
     
-    @Test @Ignore("pending feature")
+    @Test
     public void thatBooleanFalseConstantIsParsedCorrectly() {
         Handle h = this.reader.read(readerFromString("#f"));
         assertNotNull(h);
