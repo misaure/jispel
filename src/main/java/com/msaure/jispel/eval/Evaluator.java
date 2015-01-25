@@ -1,18 +1,22 @@
 package com.msaure.jispel.eval;
 
+import com.msaure.jispel.core.RecoverableException;
+import com.msaure.jispel.memory.Handle;
+import com.msaure.jispel.memory.TypeException;
+
 /**
  *  Subclasses of Evaluator will usually process nodes returned by successive
  *  calls to some Lisp reader.
  * 
- *  The Evaluator in most general terms is some
+ *  <p>The Evaluator in most general terms is some
  *  object that performs some processing on the graph-like structure composed
  *  by a reader and stored in a NodeFactory. The kind of processing performed
  *  by Evaluator instances can be, e.g., pretty-printing, compilation, direct
  *  evaluation, or whatever. So, if you want to turn the Lispel interpreter
  *  into a lispel pretty-printer, you just have to provide a new subclass of
- *  this class.<p>
+ *  this class.
  * 
- *  The current version of the evaluator maintains an explicit stack of
+ *  <p>The current version of the evaluator maintains an explicit stack of
  *  binding environments to implement lexical binding (i.e. nested variable
  *  scopes). These methods have been added to compensate the lack of a 
  *  'real' activation stack. Once a proper implementation of an activation
@@ -22,4 +26,7 @@ package com.msaure.jispel.eval;
  *  @version 0.2
  */
 public interface Evaluator {
+    
+    Handle eval( Handle node) throws RecoverableException, TypeException;
+    
 }

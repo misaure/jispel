@@ -38,6 +38,8 @@ public class Interpreter {
     private boolean exitRequested;
     private boolean gcRequested;
     private GarbageCollector gc;
+    private final Evaluator evaluator;
+    
     private static Interpreter INSTANCE;
 
     public Interpreter() {
@@ -54,6 +56,8 @@ public class Interpreter {
             LEXER_INITIALIZED = true;
         }
         exitRequested = gcRequested = false;
+        
+        this.evaluator = factory.createEvaluator(ctx);
 
     }
 
@@ -165,7 +169,7 @@ public class Interpreter {
     }
 
     public Evaluator getEvaluator() {
-        throw new UnsupportedOperationException("not implemented");
+        return this.evaluator;
    }
 
     public Context getContext() {

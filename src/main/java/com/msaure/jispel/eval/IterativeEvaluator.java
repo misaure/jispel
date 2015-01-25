@@ -1,13 +1,22 @@
 package com.msaure.jispel.eval;
 
+import com.msaure.jispel.commons.base.Arg;
 import com.msaure.jispel.core.Environment;
 import com.msaure.jispel.core.RecoverableException;
 import com.msaure.jispel.interp.Context;
+import com.msaure.jispel.memory.BuiltinValue;
 import com.msaure.jispel.memory.Handle;
+import com.msaure.jispel.memory.SpecialValue;
 import com.msaure.jispel.memory.TypeException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IterativeEvaluator implements Evaluator {
+    
+    private static final Logger LOG = LoggerFactory.getLogger(IterativeEvaluator.class);
     
     private final Context ctx;
     private final Stack<Environment> envStack;
@@ -43,90 +52,100 @@ public class IterativeEvaluator implements Evaluator {
      * This is what evalSExpression does. Before actually calling any code body,
      * all arguments will be evaluated using calls to eval().
      * 
-     * @param node A CONS node which is to be evaluated as an s-expression.
+     * @param node A cons node which is to be evaluated as an s-expression. Must not be <code>null</code>.
+     * 
+     * @return Returns the result of the expression evaluation as a heap cell handle.
      */
-    public Handle evalExpression( Handle node) throws RecoverableException {
-        throw new UnsupportedOperationException("not implemented");
-//  MCAssertValidInstance();
-//  assert( 0 != node);
-//
+    public Handle evalExpression(Handle node) throws TypeException, RecoverableException {
+        Arg.notNull(node, "node");
+
 //#if defined( DEBUG) && DEBUG > 2
 //  std::cerr << "SimpleEvaluator::evalExpression: ";
 //  printList( node, std::cerr);
 //  std::cerr << std::endl;
 //#endif
 //
-//  // The car cell of the first node either contains a lambda
-//  // expression or a symbol which refers to some executable node type.
-//  // In both cases the first node needs to be evaluated before application.
-//  Handle_ptr expr = eval( node->car());
-//  if (0 == expr)
-//    throw "SimpleEvaluator::evalExpression: eval returned (null)";
-//
-//  if (expr->checkFlag( Handle::SPECIALFLAG)) {
-//    // Handle specials (don't evaluate arguments before call)
-//
-//    if (expr->hasType( Handle::ntCFUNC)) {
-//      // --- apply builtin special form
-//      SpecialValue *cmd = dynamic_cast<SpecialValue*>( expr->typeImpl());
-//      assert( 0 != cmd);
-//      return cmd->execute( m_ctx, m_envStack.top(), node);
-//    }
-//
-//  } else {
-//    // Handle standard s-expression: evaluate arguments before calling
-//
-//    // step 1: collect arguments
-//    std::vector<Handle_ptr> args;
-//    Handle_ptr arg;
-//    if (eq( node->cdr(), m_ctx.NIL))
-//      std::cerr << "nil arglist" << std::endl;
-//    for (arg = node->cdr(); arg != m_ctx.NIL; arg = arg->cdr()) {
-//#if defined( DEBUG) && DEBUG > 3
-//      std::cerr << "eval arg: " << *(node->car()) << std::endl;
-//#endif /*DEBUG*/
-//      args.push_back( eval( arg->car()));
-//    }
-//#if defined( DEBUG) && DEBUG > 2
-//    std::cerr << "collected " << args.size() << " arguments" << std::endl;
-//#endif
-//
-//    // step 2: execute function with the arguments collected before
-//    if (expr->hasType( Handle::ntCFUNC)) {
-//      // --- apply builtin
-//      BuiltinValue *cmd = dynamic_cast<BuiltinValue*>( expr->typeImpl());
-//      assert( 0 != cmd);
-//      return cmd->execute( m_ctx, m_envStack.top(), args);
-//
-//    } else if (expr->hasType( Handle::ntCLOSURE)) {
-//      // --- apply closure
-//      // a: push new binding environment and add arguments to it
-//      pushEnvironment( expr->bindArguments( args));
+        // The car cell of the first node either contains a lambda
+        // expression or a symbol which refers to some executable node type.
+        // In both cases the first node needs to be evaluated before application.
+        Handle expr = eval(node.car());
+        if (null == expr) {
+            throw new RecoverableException("SimpleEvaluator::evalExpression: eval returned (null)");
+        }
+
+        if (expr.checkFlag(Handle.SPECIALFLAG)) {
+            // Handle specials (don't evaluate arguments before call)
+
+            if (expr.hasType(Handle.NodeType.CFUNC)) {
+                // --- apply builtin special form
+                final SpecialValue cmd = (SpecialValue) expr.typeImpl();
+                assert null != cmd;
+                return cmd.execute(ctx, envStack.peek(), node);
+            }
+
+        } else {
+    // Handle standard s-expression: evaluate arguments before calling
+
+            // step 1: collect arguments
+            final List<Handle> argsTmp = new ArrayList<>();   //std::vector<Handle_ptr> args;
+
+            if (eq(node.cdr(), ctx.NIL)) {
+                LOG.debug("nil argument list");
+            }
+
+            for (Handle arg = node.cdr(); !eq(arg, ctx.NIL); arg = arg.cdr()) {
+                argsTmp.add(eval(arg.car()));
+            }
+
+            final Handle[] args = argsTmp.toArray(new Handle[argsTmp.size()]);
+
+            //}
+//    #if defined( DEBUG) && DEBUG > 2
+//        std::cerr << "collected " << args.size() << " arguments" << std::endl;
+//    #endif
+            LOG.debug("collected {} arguments", Integer.valueOf(argsTmp.size()));
+
+            // step 2: execute function with the arguments collected before
+            if (expr.hasType(Handle.NodeType.CFUNC)) {
+                // --- apply builtin
+                BuiltinValue cmd = (BuiltinValue) expr.typeImpl(); //dynamic_cast<BuiltinValue*>( expr->typeImpl());
+                assert null != cmd;
+                //return cmd->execute( m_ctx, m_envStack.top(), args);
+                return cmd.execute(ctx, envStack.peek(), args);
+
+            } else if (expr.hasType(Handle.NodeType.CLOSURE)) {
+      // --- apply closure
+                // a: push new binding environment and add arguments to it
+                pushEnvironment(expr.bindArguments(args));
+
 //#if defined( DEBUG) && DEBUG > 2
 //      std::cerr << "closure body: ";
 //      printList( expr->body(), std::cerr);
 //      std::cerr << std::endl;
 //#endif
-//      // b: call eval on the closure's body
-//      Handle_ptr retval = 0;
-//      Handle_ptr pos;
-//      for (pos=expr->body(); !eq( pos, m_ctx.NIL); pos=pos->cdr())
-//         retval = eval( pos->car());
-//      popEnvironment();
-//      MCAssert( 0 != retval, "invalid lambda application");
-//      return retval;
-//
-//    } else if (expr->hasType( Handle::ntOBJECT)) {
-//      // --- message sending
-//      //MISSING: object implementation, need to create a good design first
-//      return m_ctx.NIL;
-//
-//    } else
-//      throw RecoverableException( "invalid expression type", __FILE__, __LINE__);
-//  }
-//
-//  MCAssertNotReached( 0);
+                // b: call eval on the closure's body
+                Handle retval = null;
 
+                for (Handle pos = expr.body(); !eq(pos, ctx.NIL); pos = pos.cdr()) {
+                    retval = eval(pos.car());
+                }
+
+                popEnvironment();
+
+      //MCAssert( 0 != retval, "invalid lambda application");
+                return retval;
+
+            } else if (expr.hasType(Handle.NodeType.OBJECT)) {
+      // --- message sending
+                //MISSING: object implementation, need to create a good design first
+                return ctx.NIL;
+
+            } else {
+                throw new RecoverableException("invalid expression type");
+            }
+        }
+
+        throw new UnsupportedOperationException("undefined state in evaluator");
     }
 
     /**

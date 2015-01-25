@@ -5,6 +5,6 @@ import com.msaure.jispel.interp.Context;
 
 public abstract class SpecialValue extends CommandImpl {
 
-    public abstract Handle execute( Context ctx, Environment env, Handle[] args);
+    public abstract Handle execute( Context ctx, Environment env, Handle args);
 
 }

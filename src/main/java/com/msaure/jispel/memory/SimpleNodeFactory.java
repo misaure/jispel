@@ -1,8 +1,10 @@
 package com.msaure.jispel.memory;
 
 import com.msaure.jispel.core.Environment;
+import com.msaure.jispel.memory.builder.ConsBuilder;
 import com.msaure.jispel.memory.type.BooleanHandle;
 import com.msaure.jispel.memory.type.ConsHandle;
+import com.msaure.jispel.memory.type.StringHandle;
 import com.msaure.jispel.memory.type.SymbolHandle;
 import java.util.Collection;
 
@@ -38,7 +40,7 @@ public class SimpleNodeFactory implements NodeFactory {
 
     @Override
     public Handle makeString(String value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new StringHandle(value);
     }
 
     @Override
@@ -76,6 +78,10 @@ public class SimpleNodeFactory implements NodeFactory {
         return new ConsHandle();
     }
 
+    public ConsBuilder cons() {
+        return new SimpleConsBuilder();
+    }
+    
     @Override
     public Handle makeCons(Handle car) throws TypeException {
         final ConsHandle ch = new ConsHandle();
@@ -103,4 +109,36 @@ public class SimpleNodeFactory implements NodeFactory {
         return new ConsHandle();
     }
     
+    private static class SimpleConsBuilder implements ConsBuilder {
+        Handle car;
+        Handle cdr;
+        
+        @Override
+        public ConsBuilder car(Handle car) {
+            this.car = car;
+            return this;
+        }
+
+        @Override
+        public ConsBuilder cdr(Handle cdr) {
+            this.cdr = cdr;
+            return this;
+        }
+
+        @Override
+        public ConsBuilder nil() {
+            this.car = null;
+            this.cdr = null;
+            return this;
+        }
+
+        @Override
+        public ConsHandle build() throws TypeException {
+            final ConsHandle newCons = new ConsHandle();
+            newCons.setCar(this.car);
+            newCons.setCdr(this.cdr);
+            
+            return newCons;
+        }
+    }
 }
