@@ -33,11 +33,15 @@ public class IterativeEvaluator implements Evaluator {
      * unchanged, thus implementing self-evaluating node types.
      * 
      * @param node The node which is to be evaluated.
+     * 
+     * @return Returns the result of the evaluation of the given s-expression.
      */
+    @Override
     public Handle eval( Handle node) throws RecoverableException, TypeException {
         if (node.hasType(Handle.NodeType.CONS)) {
             //FIXME: why handle application of NIL?
             return (eq(node, ctx.NIL))? ctx.NIL : evalExpression(node);
+            
         } else if (node.hasType(Handle.NodeType.SYMBOL)) {
             return evalVariable(node);
         }

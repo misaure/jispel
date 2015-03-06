@@ -6,24 +6,6 @@ public class NodeUtils {
     
     public static String typetagToString( Handle.NodeType t) {
         return t.name();
-        
-        // TODO add to NodeType as additional attribute
-//      switch( t) {
-//      case Handle::ntEMPTY:		return "empty";
-//      case Handle::ntBOOLEAN:	return "boolean";
-//      case Handle::ntCHARACTER:	return "character";
-//      case Handle::ntINTEGER:	return "integer";
-//      case Handle::ntDOUBLE:	return "double";
-//      case Handle::ntSTRING:	return "string";
-//      case Handle::ntSYMBOL:	return "symbol";
-//      case Handle::ntARRAY:
-//      case Handle::ntAVECTOR:	return "vector";
-//      case Handle::ntCONS:		return "pair";
-//      case Handle::ntCFUNC:		return "builtin";
-//      case Handle::ntCLOSURE:	return "closure";
-//      default:
-//        return "unknown type";
-//      }
     }
 
     public static int listlength(Handle n) throws TypeException {
@@ -41,6 +23,10 @@ public class NodeUtils {
     
     public static void printList(Handle n) throws TypeException {
         printList(n, System.out);
+    }
+
+    public static boolean isList(Handle h) {
+        throw new UnsupportedOperationException("not implemented");
     }
     
     public static boolean eq(Handle n1, Handle n2) {
@@ -70,4 +56,5 @@ public class NodeUtils {
         return false;
     }
 
+    
 }

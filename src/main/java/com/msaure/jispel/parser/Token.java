@@ -7,14 +7,19 @@ package com.msaure.jispel.parser;
 */
 public class Token {
     
+    public static final Token EOF = new Token(TokenType.EOF, "");
+    public static final Token LPAREN = new Token(Token.TokenType.LPAREN, "(");
+    public static final Token RPAREN = new Token(Token.TokenType.RPAREN, ")");
+    public static final Token QUOTE = new Token(Token.TokenType.QUOTECHAR, "'");
+    
     private TokenType tokennum;
     private String lexval;
     
     public static enum TokenType {
-        ttEOF, ttLPAREN, ttRPAREN, ttID, ttKEYWORD,
-        ttINT, ttDOUBLE, ttSTRING, ttVECSTART,
-        ttOPERATOR, ttERROR, ttFALSE, ttTRUE, ttCHARACTER, 
-        ttQUOTECHAR, ttMAX;
+        EOF, LPAREN, RPAREN, ID, KEYWORD,
+        INT, DOUBLE, STRING, VECSTART,
+        OPERATOR, ERROR, FALSE, TRUE, CHARACTER, 
+        QUOTECHAR, MAX;
     }
     
     /**
@@ -30,6 +35,8 @@ public class Token {
      * @param lexval The input read by the scanner.
      */
     public Token( TokenType tokennum, String lexval) {
+        this.tokennum = tokennum;
+        this.lexval = lexval;
     }
     
     public TokenType tokennum() {
@@ -58,10 +65,27 @@ public class Token {
     public String convertSymbol(String s) {
         return null;
     }
+
+    public TokenType getTokennum() {
+        return tokennum;
+    }
+
+    public void setTokennum(TokenType tokennum) {
+        this.tokennum = tokennum;
+    }
+
+    public String getLexval() {
+        return lexval;
+    }
+
+    public void setLexval(String lexval) {
+        this.lexval = lexval;
+    }
     
     
     @Override
     public String toString() {
         return null;
     }
+
 }
