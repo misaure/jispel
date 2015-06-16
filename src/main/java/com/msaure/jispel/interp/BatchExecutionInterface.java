@@ -2,11 +2,6 @@ package com.msaure.jispel.interp;
 
 import com.msaure.jispel.memory.Handle;
 
-/**
- * User: msaure
- * Date: 13.07.13
- * Time: 15:10
- */
 public class BatchExecutionInterface implements UserInterface {
 
     @Override

@@ -1,6 +1,6 @@
 package com.msaure.jispel.eval;
 
-import com.msaure.jispel.commons.base.Arg;
+import com.msaure.jispel.commons.base.Check;
 import com.msaure.jispel.core.Environment;
 import com.msaure.jispel.core.RecoverableException;
 import com.msaure.jispel.interp.Context;
@@ -61,7 +61,7 @@ public class IterativeEvaluator implements Evaluator {
      * @return Returns the result of the expression evaluation as a heap cell handle.
      */
     public Handle evalExpression(Handle node) throws TypeException, RecoverableException {
-        Arg.notNull(node, "node");
+        Check.notNull(node, "node");
 
 //#if defined( DEBUG) && DEBUG > 2
 //  std::cerr << "SimpleEvaluator::evalExpression: ";

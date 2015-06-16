@@ -1,6 +1,6 @@
 package com.msaure.jispel.commons.base;
 
-public class Arg {
+public class Check {
 
     public static void notNull(Object o, String argumentName) {
         if (null == o) {
