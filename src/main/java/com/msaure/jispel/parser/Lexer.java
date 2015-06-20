@@ -80,6 +80,7 @@ public class Lexer {
 
                     } else if (isdigit(c) || '-' == c || '+' == c) {
                         state = LexerState.NUMBER;
+                        buffer.append((char) c);
                         break;
 
                     } else if ('\'' == c) {
@@ -158,13 +159,8 @@ public class Lexer {
                     //break;
 
                 case NUMBER:
-                    //is.get();
-                    if ('+' == c || '-' == c) {
-                        //buffer.append(c);
-                        //c = is.get();
-                    }
                     if (!isdigit(c)) {
-                        return new Token(Token.TokenType.OPERATOR, buffer.toString());
+                        return new Token(Token.TokenType.INT, buffer.toString());
                     }
                     while (isdigit(c)) {
                         //buffer.append(c);

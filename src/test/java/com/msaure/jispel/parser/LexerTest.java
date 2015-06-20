@@ -7,17 +7,22 @@ import org.junit.Test;
 
 public class LexerTest {
 
-    @Test
+    @Test(timeout = 500)
     public void testReadingOfFalseLiteral() throws Exception {
         assertTokenType("#f", Token.TokenType.FALSE);
     }
     
-    @Test
+    @Test(timeout = 500)
     public void testReadingOfTrueLiteral() throws Exception {
         assertTokenType("#t", Token.TokenType.TRUE);
     }
     
-    //@Test
+    @Test(timeout = 500)
+    public void testReadingOfKeyword() throws Exception {
+        assertTokenType("string->symbol", Token.TokenType.KEYWORD);
+    }
+    
+    @Test(timeout = 500)
     public void testReadingOfUnsignedInteger() throws Exception {
         assertTokenType("1", Token.TokenType.INT);
         assertTokenType("123", Token.TokenType.INT);
