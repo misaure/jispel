@@ -1,47 +1,62 @@
 package com.msaure.jispel.parser;
 
-import com.msaure.jispel.interp.Context;
-import com.msaure.jispel.memory.Handle;
-import java.io.Reader;
-import java.io.StringReader;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import com.msaure.jispel.memory.NodeFactory;
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.msaure.jispel.interp.Context;
+import com.msaure.jispel.memory.Handle;
+import com.msaure.jispel.memory.NodeFactory;
+import com.msaure.jispel.parser.impl.SimpleReader;
+
 @Ignore("pending feature")
 public class SimpleReaderTest {
     
-    private SimpleReader reader;
+    SimpleReader reader;
+    Lexer lexerMock;
     
     @Before
     public void setUp() {
         Context ctx = null;
         NodeFactory factory = null;
         this.reader = new SimpleReader(ctx, factory);
+        lexerMock = mock(Lexer.class);
     }
     
     @Test
-    public void thatAnIntegerIsParsedCorrectly() {
-        Handle h = this.reader.read(readerFromString("1234"));
+    public void thatAnIntegerIsParsedCorrectly() throws IOException {
+    	when(lexerMock.nextToken())
+    		.thenReturn(new Token(Token.TokenType.INT, "1234"));
+    	
+        Handle h = this.reader.read(lexerMock);
+        
         assertNotNull(h);
     }
     
     @Test
-    public void thatBooleanTrueConstantIsParsedCorrectly() {
-        Handle h = this.reader.read(readerFromString("#t"));
+    public void thatBooleanTrueConstantIsParsedCorrectly() throws IOException {
+    	when(lexerMock.nextToken())
+    		.thenReturn(new Token(Token.TokenType.TRUE, "#t"));
+    	
+        Handle h = this.reader.read(lexerMock);
+        
         assertNotNull(h);
     }
     
     @Test
-    public void thatBooleanFalseConstantIsParsedCorrectly() {
-        Handle h = this.reader.read(readerFromString("#f"));
+    public void thatBooleanFalseConstantIsParsedCorrectly() throws IOException {
+    	when(lexerMock.nextToken())
+    		.thenReturn(new Token(Token.TokenType.FALSE, "#f"));
+    	
+        Handle h = this.reader.read(lexerMock);
+        
         assertNotNull(h);
     }
-    
-    private Reader readerFromString(String s) {
-        return new StringReader(s);
-    }
+
 }

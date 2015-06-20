@@ -29,6 +29,7 @@ public class EnvironmentTest {
         assertFalse(env2.isToplevelEnvironment());
     }
 
+    @Test
     public void testDirectLookup() {
         final Environment env = new Environment();
         env.put("testval", new IntegerHandle());

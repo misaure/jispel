@@ -40,7 +40,7 @@ public class Interpreter {
     private GarbageCollector gc;
     private final Evaluator evaluator;
     
-    private static Interpreter INSTANCE;
+    //private static Interpreter INSTANCE;
 
     public Interpreter() {
         this(new DefaultComponentFactory());

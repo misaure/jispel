@@ -1,7 +1,6 @@
 package com.msaure.jispel.parser;
 
 import com.msaure.jispel.memory.Handle;
-import java.io.Reader;
 
 public interface LispelReader {
     
@@ -13,8 +12,8 @@ public interface LispelReader {
         }
     }
     
-    Handle read(Reader stream);
-    Handle readList(Reader stream);
-    Handle readVector(Reader stream);
-    Handle readAtom(Reader stream);
+    Handle read(Lexer stream);
+    Handle readList(Lexer stream);
+    Handle readVector(Lexer stream);
+    Handle readAtom(Lexer stream);
 }

@@ -2,8 +2,12 @@ package com.msaure.jispel.parser;
 
 import java.io.IOException;
 import java.io.StringReader;
+
 import static org.junit.Assert.*;
+
 import org.junit.Test;
+
+import com.msaure.jispel.parser.impl.DefaultLexer;
 
 public class LexerTest {
 
@@ -39,6 +43,6 @@ public class LexerTest {
     }
     
     protected Lexer lexerForString(String input) throws IOException {
-        return new Lexer(new StringReader(input));
+        return new DefaultLexer(new StringReader(input));
     }
 }

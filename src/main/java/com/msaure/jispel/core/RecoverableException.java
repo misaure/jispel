@@ -15,4 +15,8 @@ public class RecoverableException extends Exception {
     public RecoverableException(Throwable t) {
     	super(t);
     }
+    
+    public RecoverableException(String message, Throwable t) {
+    	super(message, t);
+    }
 }

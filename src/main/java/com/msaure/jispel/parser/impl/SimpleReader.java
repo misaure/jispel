@@ -1,9 +1,11 @@
-package com.msaure.jispel.parser;
+package com.msaure.jispel.parser.impl;
 
 import com.msaure.jispel.interp.Context;
 import com.msaure.jispel.memory.Handle;
 import com.msaure.jispel.memory.NodeFactory;
-import java.io.Reader;
+import com.msaure.jispel.parser.Lexer;
+import com.msaure.jispel.parser.LispelReader;
+import com.msaure.jispel.parser.Token;
 
 public class SimpleReader implements LispelReader {
 
@@ -31,22 +33,22 @@ public class SimpleReader implements LispelReader {
     }
 
     @Override
-    public Handle read(Reader r) {
+    public Handle read(Lexer r) {
         return null;
     }
 
     @Override
-    public Handle readList(Reader r) {
+    public Handle readList(Lexer r) {
         return null;
     }
 
     @Override
-    public Handle readVector(Reader r) {
+    public Handle readVector(Lexer r) {
         return null;
     }
 
     @Override
-    public Handle readAtom(Reader r) {
+    public Handle readAtom(Lexer r) {
         return null;
     }
 }

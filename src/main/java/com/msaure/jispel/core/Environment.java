@@ -55,7 +55,10 @@ public class Environment {
     }
 
     /**
-     * Checks if a named value exists.
+     * Checks if a named value exists. Traverses the parent 
+     * environment chain if the value does not exist in the
+     * current environment.
+     * 
      * @return true if a value is bound to name
      */
     public boolean exists(String name) {

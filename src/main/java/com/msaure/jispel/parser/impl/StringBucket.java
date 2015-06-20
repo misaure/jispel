@@ -1,4 +1,4 @@
-package com.msaure.jispel.parser;
+package com.msaure.jispel.parser.impl;
 
 public class StringBucket {
     
