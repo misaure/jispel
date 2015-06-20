@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class DefaultComponentFactoryTest {
     
-    private DefaultComponentFactory factory;
+    DefaultComponentFactory factory;
     
     @Before
     public void setUp() {

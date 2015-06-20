@@ -11,7 +11,6 @@ import com.msaure.jispel.memory.SimpleNodeFactory;
 /**
  * This is the ComponentFactory used by default when no other factory is
  * explicitly specified upon creation of a new interpreter instance.
- * @version 0.1
  */
 public class DefaultComponentFactory implements ComponentFactory {
 

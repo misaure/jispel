@@ -6,7 +6,9 @@ import java.io.Reader;
 public interface LispelReader {
     
     class ReadException extends RuntimeException {
-        public ReadException(String msg) {
+		private static final long serialVersionUID = -3115344325832221093L;
+
+		public ReadException(String msg) {
             super(msg);
         }
     }

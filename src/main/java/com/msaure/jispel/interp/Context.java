@@ -7,6 +7,7 @@ import com.msaure.jispel.memory.Handle;
 import com.msaure.jispel.memory.NodeFactory;
 
 public class Context {
+	
     public final NodeFactory factory;
     public final Environment toplevel;
     public Environment currentEnv;
