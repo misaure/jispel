@@ -27,6 +27,9 @@ public class DefaultLexer implements Lexer {
     public static final char[] OPERATOR_CHARACTES = "+-*/".toCharArray();
     public static final char[] RELOP_CHARACTERS = "<>=".toCharArray();
     
+    public static final int EOF = -2;
+    public static final int EMPTY = -1;
+    
     public static final int LEXBUFFERSIZE = 1024;
     
     public static enum LexerState {
@@ -35,6 +38,7 @@ public class DefaultLexer implements Lexer {
     
     private final Reader is;
     private int putback = -1;
+    private int lookahead = EMPTY;
     
     public DefaultLexer(Reader is) throws IOException {
         this.is = is;
@@ -47,58 +51,64 @@ public class DefaultLexer implements Lexer {
         LexBuffer buffer = new LexBuffer(LEXBUFFERSIZE);
 
         LexerState state = LexerState.INITIAL;
+        
         for (;;) {
-            int c = nextChar();
+        	
+            if (EMPTY == lookahead) {
+            	lookahead = nextChar();
+            }
             
             //FIXME: many unget() can be saved when this is done only once outside
             // the loop, but I don't want to break the scanner again, right now...
             switch (state) {
                 case INITIAL:
-                    if (eof(c)) {
+                    if (eof(lookahead)) {
                         return new Token(Token.TokenType.EOF, "");
 
-                    } else if (is_chartype(c, CHARTYPE_COMMENT)) {
+                    } else if (is_chartype(lookahead, CHARTYPE_COMMENT)) {
                         skiptoeol(is);
                         break;
 
-                    } else if (isspace(c)) {
+                    } else if (isspace(lookahead)) {
                         state = LexerState.SKIPWS;
                         break;
 
-                    } else if ('(' == c) {
+                    } else if ('(' == lookahead) {
                         return Token.LPAREN;
 
-                    } else if (')' == c) {
+                    } else if (')' == lookahead) {
                         return Token.RPAREN;
 
-                    } else if ('#' == c) {
+                    } else if ('#' == lookahead) {
                         state = LexerState.SPECIAL;
+                        consume();
                         break;
 
-                    } else if (isalpha(c)) {
+                    } else if (isalpha(lookahead)) {
                         state = LexerState.ID;
                         break;
 
-                    } else if (':' == c) {
+                    } else if (':' == lookahead) {
                         state = LexerState.KEYWORD;	// consume leading ':'
                         break;
 
-                    } else if (isdigit(c) || '-' == c || '+' == c) {
+                    } else if (isdigit(lookahead) || '-' == lookahead || '+' == lookahead) {
                         state = LexerState.NUMBER;
-                        buffer.append((char) c);
+                        consume();
+                        buffer.append((char) lookahead);
                         break;
 
-                    } else if ('\'' == c) {
+                    } else if ('\'' == lookahead) {
                         return Token.QUOTE;
 
-                    } else if ('"' == c) {
+                    } else if ('"' == lookahead) {
                         state = LexerState.STRING;		// read string
                         break;
 
-                    } else if (is_chartype(c, CHARTYPE_OPCHAR)) {
+                    } else if (is_chartype(lookahead, CHARTYPE_OPCHAR)) {
                         return new Token(Token.TokenType.OPERATOR, buffer.toString());
 
-                    } else if (is_chartype(c, CHARTYPE_RELOP)) {
+                    } else if (is_chartype(lookahead, CHARTYPE_RELOP)) {
                         return new Token(Token.TokenType.ID, buffer.toString());
 
                     } else {
@@ -106,10 +116,10 @@ public class DefaultLexer implements Lexer {
                     }
 
                 case SKIPWS:
-                    while (!eof(c) && isspace(c)) {
-                        c = is.read(); //is.get();
+                    while (!eof(lookahead) && isspace(lookahead)) {
+                    	lookahead = is.read(); //is.get();
                     }
-                    if (-1 == c) {
+                    if (-1 == lookahead) {
                         return Token.EOF;
                     }
                     //is.unget(), buffer.reset();
@@ -117,31 +127,33 @@ public class DefaultLexer implements Lexer {
                     break;
 
                 case SPECIAL: // read special introduced by '#'
-                    if (eof(c)) {
+                    if (eof(lookahead)) {
                         return new Token(Token.TokenType.ERROR, "end-of-file after '#'");
                     }
-                    if ('(' == c) {
+                    if ('(' == lookahead) {
                         return new Token(Token.TokenType.VECSTART, buffer.toString());
 
-                    } else if ('f' == c) {
+                    } else if ('f' == lookahead) {
+                    	consume();
                         return new Token(Token.TokenType.FALSE, buffer.toString());
 
-                    } else if ('t' == c) {
+                    } else if ('t' == lookahead) {
+                    	consume();
                         return new Token(Token.TokenType.TRUE, buffer.toString());
 
-                    } else if ('!' == c) {
+                    } else if ('!' == lookahead) {
                         skiptoeol(is);
                         state = LexerState.INITIAL;
                         break;
 
-                    } else if ('\\' == c) {
-                        c = is.read(); //is.get();
+                    } else if ('\\' == lookahead) {
+                    	lookahead = is.read(); //is.get();
                         for (;;) {
-                            c = is.read(); //is.get();
-                            if (isspace(c) || is_chartype(c, CHARTYPE_NONID)) {
+                        	lookahead = is.read(); //is.get();
+                            if (isspace(lookahead) || is_chartype(lookahead, CHARTYPE_NONID)) {
                                 break;
                             }
-                            buffer.append((char) c);
+                            buffer.append((char) lookahead);
                         }
                         //is.unget();
 
@@ -152,28 +164,33 @@ public class DefaultLexer implements Lexer {
                     }
 
                 case ID:
+                	buffer.append((char) lookahead);
+                	consume();
+                	
                     for (;;) {
-                        if (is_chartype(c, CHARTYPE_NONID) || isspace(c) || eof(c)) {
-                            //is.unget();
-                            //--buffer;
-
+                    	lookahead = nextChar();
+                    	
+                        if (is_chartype(lookahead, CHARTYPE_NONID) || isspace(lookahead) || eof(lookahead)) {
                             return new Token(Token.TokenType.ID, buffer.toString());
+                        } else {
+                        	buffer.append((char) lookahead);
+                        	consume();
                         }
-                        //buffer.append(c = is.read());
                     }
                     //break;
 
                 case NUMBER:
-                    if (!isdigit(c)) {
+                    if (!isdigit(lookahead) && '.' != ((char) lookahead)) {
                         return new Token(Token.TokenType.INT, buffer.toString());
                     }
-                    while (isdigit(c)) {
-                        //buffer.append(c);
-                        //c = is.get();
+                    else if (isdigit(lookahead)) {
+                    	buffer.append((char) lookahead);
+                    	consume();
                     }
-                    if ('.' == c) {
+                    else if ('.' == lookahead) {
                         state = LexerState.FLOAT;
-                        break;
+                        buffer.append('.');
+                        consume();
                     }
                     //is.unget();
 
@@ -181,43 +198,43 @@ public class DefaultLexer implements Lexer {
 
                 case STRING:
                     //c = is.read(); //is.get();				//skip leading quote character
-                    while ('"' != c) {
-                        if (eof(c)) {			// signal error on EOF
+                    while ('"' != lookahead) {
+                        if (eof(lookahead)) {			// signal error on EOF
                             return new Token(Token.TokenType.ERROR, "end-of-file inside string");
                         }
-                        if ('\\' == c) {		// save characters, performing
-                            c = is.read(); //is.get();		// backslash substitution
-                            switch (c) {
+                        if ('\\' == lookahead) {		// save characters, performing
+                        	lookahead = is.read(); //is.get();		// backslash substitution
+                            switch (lookahead) {
                                 case 'n':
-                                    c = '\n';
+                                	lookahead = '\n';
                                     break;
                                 case 'r':
-                                    c = '\r';
+                                	lookahead = '\r';
                                     break;
                                 case 'b':
-                                    c = '\b';
+                                	lookahead = '\b';
                                     break;
                                 case 't':
-                                    c = '\t';
+                                	lookahead = '\t';
                                     break;
 	   // TODO case 'a': c = '\a'; break;
                                 // TODO case 'v': c = '\v'; break;
                                 case 'f':
-                                    c = '\f';
+                                	lookahead = '\f';
                                     break;
                                 case '"':
-                                    c = '"';
+                                	lookahead = '"';
                                     break;
                             }
                         }
                         //buffer.append(c);
-                        c = is.read(); //is.get();
+                        lookahead = is.read(); //is.get();
                     }
 
                     return new Token(Token.TokenType.STRING, buffer.toString());
 
                 case FLOAT:
-                    if (eof(c) || !isdigit(c)) {
+                    if (eof(lookahead) || !isdigit(lookahead)) {
                         //is.unget();
                         //buffer.unget();
 
@@ -226,10 +243,10 @@ public class DefaultLexer implements Lexer {
                     break;
 
                 case KEYWORD:
-                    c = is.read(); //is.get();
-                    while (isalnum(c)) {
+                	lookahead = is.read(); //is.get();
+                    while (isalnum(lookahead)) {
                         //buffer.append(c);
-                        c = is.read(); //is.get();
+                    	lookahead = is.read(); //is.get();
                     }
                     //is.unget();
 
@@ -249,18 +266,33 @@ public class DefaultLexer implements Lexer {
     }
     
     protected int nextChar() throws IOException {
-        if (-1 != this.putback) {
-            int t = this.putback;
-            this.putback = -1;
-            
-            return t;
-        }
+    	if (EOF == this.lookahead) {
+    		throw new IOException("attempt to read past end of file");
+    	}
+    	
+    	if (EMPTY == this.lookahead) {
+    		int c = is.read();
+    		
+    		if (-1 == c) {
+    			this.lookahead = EOF;
+    		} else {
+    			this.lookahead = (int) c;
+    		}
+    	}
         
-        return is.read();
+        return lookahead;
+    }
+    
+    protected void consume() {
+    	this.lookahead = EMPTY;
     }
     
     protected boolean eof(int c) {
-        return -1 == c;
+        return EOF == c;
+    }
+    
+    protected boolean empty(int c) {
+    	return EMPTY == c;
     }
     
     protected void skiptoeol(Reader is) {
@@ -280,7 +312,7 @@ public class DefaultLexer implements Lexer {
     }
     
     protected boolean isalnum(int c) {
-        throw new UnsupportedOperationException("not implemented");
+    	return Character.isLetter(c) || Character.isDigit(c);
     }
     
     protected boolean is_chartype(int c, long CHARTYPE_COMMENT) {

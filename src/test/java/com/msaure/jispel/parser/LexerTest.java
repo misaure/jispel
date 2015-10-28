@@ -11,22 +11,26 @@ import com.msaure.jispel.parser.impl.DefaultLexer;
 
 public class LexerTest {
 
-    @Test(timeout = 500)
+    @Test//(timeout = 500)
     public void testReadingOfFalseLiteral() throws Exception {
         assertTokenType("#f", Token.TokenType.FALSE);
     }
     
-    @Test(timeout = 500)
+    @Test//(timeout = 500)
     public void testReadingOfTrueLiteral() throws Exception {
         assertTokenType("#t", Token.TokenType.TRUE);
     }
     
-    @Test(timeout = 500)
+    @Test//(timeout = 500)
     public void testReadingOfKeyword() throws Exception {
-        assertTokenType("string->symbol", Token.TokenType.KEYWORD);
     }
     
-    @Test(timeout = 500)
+    @Test
+    public void testReadingOfIds() throws Exception {
+        assertTokenType(":akey", Token.TokenType.KEYWORD);
+    }
+    
+     @Test//(timeout = 500)
     public void testReadingOfUnsignedInteger() throws Exception {
         assertTokenType("1", Token.TokenType.INT);
         assertTokenType("123", Token.TokenType.INT);
