@@ -4,7 +4,7 @@ pipeline {
     agent any
 
     environment {
-        MAVEN_HOME = tool('Maven_3.5')
+        MAVEN_HOME = tool('maven35')
         JDK_HOME = tool('jdk8')
         PATH = "${MAVEN_HOME}/bin:${JDK_HOME}/jre/bin:${JDK_HOME}/bin:${PATH}"
     }
