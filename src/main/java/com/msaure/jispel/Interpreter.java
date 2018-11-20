@@ -68,7 +68,7 @@ public class Interpreter {
      * 
      * @param scriptSource The stream from which the program should be read.
      * 
-     * @return false if an error occured, true else.
+     * @return false if an error occurred, true else.
      */
     public boolean repl(Reader scriptSource, UserInterface ui) {
         throw new UnsupportedOperationException("not implemented");
