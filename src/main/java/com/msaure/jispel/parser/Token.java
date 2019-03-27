@@ -7,36 +7,34 @@ package com.msaure.jispel.parser;
 */
 public class Token {
     
-    public static final Token EOF = new Token(TokenType.EOF, "");
-    public static final Token LPAREN = new Token(Token.TokenType.LPAREN, "(");
-    public static final Token RPAREN = new Token(Token.TokenType.RPAREN, ")");
-    public static final Token QUOTE = new Token(Token.TokenType.QUOTECHAR, "'");
+    public static final Token EOF = token().withTokenType(TokenType.EOF).withLexicalValue("<EOF>").build();
+    public static final Token LPAREN = token().withTokenType(TokenType.LPAREN).withLexicalValue("(").build();
+    public static final Token RPAREN = token().withTokenType(TokenType.RPAREN).withLexicalValue(")").build();
+    public static final Token QUOTE = token().withTokenType(TokenType.QUOTECHAR).withLexicalValue("'").build();
+    public static final Token FALSE = token().withTokenType(TokenType.FALSE).withLexicalValue("#f").build();
+    public static final Token TRUE = token().withTokenType(TokenType.TRUE).withLexicalValue("#t").build();
     
-    private TokenType tokennum;
-    private String lexval;
+    private final TokenType tokennum;
+    private final String lexval;
     
-    public static enum TokenType {
+    public enum TokenType {
         EOF, LPAREN, RPAREN, ID, KEYWORD,
         INT, DOUBLE, STRING, VECSTART,
         OPERATOR, ERROR, FALSE, TRUE, CHARACTER, 
         QUOTECHAR, MAX;
     }
-    
-    /**
-     * Create a token instance which is marked invalid (token number -1).
-     */
-    public Token() {
+
+    public Token(TokenType tokenType, String lexicalValue) {
+        this.tokennum = tokenType;
+        this.lexval = lexicalValue;
     }
 
     /**
      * Initializes a token instance to a certain type.
-     * 
-     * @param tokennum A numeric tag specifying the token's type.
-     * @param lexval The input read by the scanner.
      */
-    public Token( TokenType tokennum, String lexval) {
-        this.tokennum = tokennum;
-        this.lexval = lexval;
+    protected Token( Builder b) {
+        this.tokennum = b.tokenType;
+        this.lexval = b.lexicalValue;
     }
     
     public TokenType tokennum() {
@@ -52,7 +50,7 @@ public class Token {
     }
     
       /**
-    This method is a hook for manipulating a symbol's lexical value before
+    This method is a hook for manipulating a symbol's lexical value
     after it has been read and before it is passed back to the caller. 
     Possible applications of this method include building an atom table to
     save memory space and speed up symbol comparisons or simply convert all
@@ -70,22 +68,43 @@ public class Token {
         return tokennum;
     }
 
-    public void setTokennum(TokenType tokennum) {
-        this.tokennum = tokennum;
-    }
-
     public String getLexval() {
         return lexval;
     }
-
-    public void setLexval(String lexval) {
-        this.lexval = lexval;
+  
+    public static Builder create() {
+        return new Builder();
     }
     
+    public static Builder token() {
+        return create();
+    }
     
     @Override
     public String toString() {
         return null;
     }
 
+    public static class Builder {
+        private String lexicalValue;
+        private TokenType tokenType;
+        
+        public Builder withLexicalValue(String lexicalValue) {
+            this.lexicalValue = lexicalValue;
+            return this;
+        }
+        
+        public Builder withTokenType(TokenType tokenType) {
+            this.tokenType = tokenType;
+            return this;
+        }
+        
+        public Token build() {
+            if (this.tokenType == null) {
+                throw new IllegalStateException("cannot create token without token type definition");
+            }
+            
+            return new Token(this);
+        }
+    }
 }
