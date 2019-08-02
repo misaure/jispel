@@ -3,6 +3,7 @@ package com.msaure.jispel.builtin.primitive;
 import com.msaure.jispel.commons.base.Check;
 import com.msaure.jispel.core.Environment;
 import com.msaure.jispel.interp.Context;
+import com.msaure.jispel.memory.Constants;
 import com.msaure.jispel.memory.Handle;
 import com.msaure.jispel.memory.SpecialValue;
 import com.msaure.jispel.memory.TypeException;
@@ -26,7 +27,7 @@ public class LambdaCommand extends SpecialValue {
         }
         
         List<Handle> argumentList = new ArrayList<>();
-        if (!eq(args.car(), ctx.NIL)) {
+        if (!eq(args.car(), Constants.NIL.asHandle())) {
             
         }
 

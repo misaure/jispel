@@ -4,10 +4,8 @@ import com.msaure.jispel.commons.base.Check;
 import com.msaure.jispel.core.Environment;
 import com.msaure.jispel.core.RecoverableException;
 import com.msaure.jispel.interp.Context;
-import com.msaure.jispel.memory.BuiltinValue;
-import com.msaure.jispel.memory.Handle;
-import com.msaure.jispel.memory.SpecialValue;
-import com.msaure.jispel.memory.TypeException;
+import com.msaure.jispel.memory.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -40,7 +38,7 @@ public class IterativeEvaluator implements Evaluator {
     public Handle eval( Handle node) throws RecoverableException, TypeException {
         if (node.hasType(Handle.NodeType.CONS)) {
             //FIXME: why handle application of NIL?
-            return (eq(node, ctx.NIL))? ctx.NIL : evalExpression(node);
+            return (eq(node, Constants.NIL.asHandle()))? Constants.NIL.asHandle() : evalExpression(node);
             
         } else if (node.hasType(Handle.NodeType.SYMBOL)) {
             return evalVariable(node);
@@ -93,11 +91,11 @@ public class IterativeEvaluator implements Evaluator {
             // step 1: collect arguments
             final List<Handle> argsTmp = new ArrayList<>();   //std::vector<Handle_ptr> args;
 
-            if (eq(node.cdr(), ctx.NIL)) {
+            if (eq(node.cdr(), Constants.NIL.asHandle())) {
                 LOG.debug("nil argument list");
             }
 
-            for (Handle arg = node.cdr(); !eq(arg, ctx.NIL); arg = arg.cdr()) {
+            for (Handle arg = node.cdr(); !eq(arg, Constants.NIL.asHandle()); arg = arg.cdr()) {
                 argsTmp.add(eval(arg.car()));
             }
 
@@ -130,7 +128,7 @@ public class IterativeEvaluator implements Evaluator {
                 // b: call eval on the closure's body
                 Handle retval = null;
 
-                for (Handle pos = expr.body(); !eq(pos, ctx.NIL); pos = pos.cdr()) {
+                for (Handle pos = expr.body(); !eq(pos, Constants.NIL.asHandle()); pos = pos.cdr()) {
                     retval = eval(pos.car());
                 }
 
@@ -142,7 +140,7 @@ public class IterativeEvaluator implements Evaluator {
             } else if (expr.hasType(Handle.NodeType.OBJECT)) {
       // --- message sending
                 //MISSING: object implementation, need to create a good design first
-                return ctx.NIL;
+                return Constants.NIL.asHandle();
 
             } else {
                 throw new RecoverableException("invalid expression type");

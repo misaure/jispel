@@ -9,6 +9,13 @@ import static org.junit.Assert.*;
 public class EnvironmentTest {
 
     @Test
+    public void thatUniqueEnvironmentIsTheTopLevelEnvironment() {
+        final Environment env1 = new Environment();
+
+        assertTrue(env1.isToplevelEnvironment());
+    }
+
+    @Test
     public void testIsToplevelEnvironment() {
         final Environment env1 = new Environment();
         final Environment env2 = new Environment(env1);
@@ -32,7 +39,7 @@ public class EnvironmentTest {
     @Test
     public void testDirectLookup() {
         final Environment env = new Environment();
-        env.put("testval", new IntegerHandle());
+        env.put("testval", IntegerHandle.valueOf(42));
         assertTrue(env.exists("testval"));
         Handle found = env.lookup("testval");
         assertNotNull(found);
@@ -43,10 +50,10 @@ public class EnvironmentTest {
         final Environment parent = new Environment();
         final Environment child = new Environment(parent);
         
-        parent.put("parentOnly", new IntegerHandle(1));
-        child.put("childOnly", new IntegerHandle(2));
-        parent.put("both", new IntegerHandle(7));
-        child.put("both", new IntegerHandle(8));
+        parent.put("parentOnly", IntegerHandle.valueOf(1));
+        child.put("childOnly", IntegerHandle.valueOf(2));
+        parent.put("both", IntegerHandle.valueOf(7));
+        child.put("both", IntegerHandle.valueOf(8));
         
         assertEquals(1, parent.lookup("parentOnly").integerValue());
         assertEquals(2, child.lookup("childOnly").integerValue());

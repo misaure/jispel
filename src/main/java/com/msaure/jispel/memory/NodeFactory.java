@@ -1,6 +1,7 @@
 package com.msaure.jispel.memory;
 
 import com.msaure.jispel.core.Environment;
+import com.msaure.jispel.memory.type.ConsHandle;
 
 import java.util.Collection;
 
@@ -26,9 +27,8 @@ public interface NodeFactory {
     Handle makeHashtable();
     Handle makeSet();
 
-    Handle makeCons();
-    Handle makeCons(Handle car) throws TypeException;
-    Handle makeCons(Handle car, Handle cdr) throws TypeException;
+    ConsHandle makeCons(Handle car) throws TypeException;
+    ConsHandle makeCons(Handle car, Handle cdr) throws TypeException;
 
     Handle makeClosure(Collection<Handle> args, Environment env, Handle codeBody);
 

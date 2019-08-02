@@ -1,6 +1,7 @@
 package com.msaure.jispel.memory;
 
 import java.io.PrintStream;
+import java.util.Objects;
 
 public class NodeUtils {
     
@@ -9,6 +10,8 @@ public class NodeUtils {
     }
 
     public static int listlength(Handle n) throws TypeException {
+        Objects.requireNonNull(n, "Handle must not be null");
+
         int length = 0;
         Handle iter = n;
         for (; !n.isNilRep(); ++length) {

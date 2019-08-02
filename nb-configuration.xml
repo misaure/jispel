@@ -13,7 +13,6 @@ You can copy and paste the single properties, into the pom.xml file and the IDE 
 That way multiple projects can share the same settings (useful for formatting rules for example).
 Any value defined here will override the pom.xml file value but is only applicable to the current project.
 -->
-        <netbeans.hint.jdkPlatform>JDK_1.7</netbeans.hint.jdkPlatform>
         <org-netbeans-spi-editor-hints-projects.text.x-java.org_2e_netbeans_2e_modules_2e_java_2e_hints_2e_AssignmentIssues_2e_incrementDecrementUsed.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.org_2e_netbeans_2e_modules_2e_java_2e_hints_2e_AssignmentIssues_2e_incrementDecrementUsed.enabled>
         <org-netbeans-spi-editor-hints-projects.text.x-java.org_2e_netbeans_2e_modules_2e_java_2e_hints_2e_AssignmentIssues_2e_assignmentToMethodParam.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.org_2e_netbeans_2e_modules_2e_java_2e_hints_2e_AssignmentIssues_2e_assignmentToMethodParam.enabled>
         <org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_RAWTYPES.enabled>true</org-netbeans-spi-editor-hints-projects.text.x-java.Javac_5f_RAWTYPES.enabled>

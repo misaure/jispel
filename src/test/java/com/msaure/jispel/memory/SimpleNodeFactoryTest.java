@@ -4,6 +4,9 @@ import com.msaure.jispel.memory.type.ConsHandle;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
+
+import com.msaure.jispel.memory.type.IntegerHandle;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,5 +32,14 @@ public class SimpleNodeFactoryTest {
         assertNotNull(h);
         assertTrue(h.hasType(Handle.NodeType.SYMBOL));
         assertEquals("mysym", h.stringValue());
+    }
+
+    @Test
+    public void thatConsWithCarOnlyReturnsValidSymbol() throws TypeException {
+        ConsHandle h = factory.makeCons(IntegerHandle.valueOf(1));
+
+        assertThat(h).isNotNull();
+        assertThat(h.car()).isEqualTo(IntegerHandle.valueOf(1));
+        assertThat(h.cdr()).isEqualTo(Constants.NIL);
     }
 }

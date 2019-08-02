@@ -1,6 +1,8 @@
 package com.msaure.jispel.core;
 
 import com.msaure.jispel.memory.Handle;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -8,12 +10,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- Environments are the place where the interpreter stores all named
- values. Environments are ordered in a hierachy to aid the implementation
- of scoping. Environments can be used to build hierachical structures
- through parent links provided for each Environment instance.
-
- @version 0.3
+ * Environments are the place where the interpreter stores all named
+ * values. Environments are ordered in a hierachy to aid the implementation
+ * of scoping. Environments can be used to build hierachical structures
+ * through parent links provided for each Environment instance.
+ *
+ * @version 0.3
+ *
+ * @since 0.0.1
  */
 public class Environment {
 
@@ -40,6 +44,7 @@ public class Environment {
      * @param name Name to which a value is connected.
      * @return A value of end() when name doesn't exist.
      */
+    @Nullable
     public Handle lookup(String name) {
         Environment current = this;
         for (;;) {
@@ -101,7 +106,7 @@ public class Environment {
      * Create a new Environment instance which has the current Environment
      * instance as parent.
      * 
-     * @todo rename to newChildEnvironment()
+     * TODO rename to newChildEnvironment()
      */
     public Environment makeChildEnvironment() {
         return new Environment(this);

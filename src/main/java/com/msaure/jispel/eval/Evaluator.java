@@ -24,6 +24,8 @@ import com.msaure.jispel.memory.TypeException;
  *  specific to recursive evaluator implementations.
  * 
  *  @version 0.2
+ *
+ *  @since 0.0.1
  */
 public interface Evaluator {
     
