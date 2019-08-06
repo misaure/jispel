@@ -4,7 +4,6 @@ import java.io.Reader;
 
 import com.msaure.jispel.core.Environment;
 import com.msaure.jispel.eval.Evaluator;
-import com.msaure.jispel.eval.IterativeEvaluator;
 import com.msaure.jispel.gc.GarbageCollector;
 import com.msaure.jispel.interp.ComponentFactory;
 import com.msaure.jispel.interp.Context;
@@ -35,22 +34,18 @@ import com.msaure.jispel.memory.SpecialValue;
  */
 public class Interpreter {
 
-	private Context ctx;
-	private static boolean LEXER_INITIALIZED;
-	private boolean exitRequested;
-	private boolean gcRequested;
-	private GarbageCollector gc;
-	private final Evaluator evaluator;
-	// private ComponentFactory factory;
+    private Context ctx;
+    private static boolean LEXER_INITIALIZED;
+    private boolean exitRequested;
+    private boolean gcRequested;
+    private GarbageCollector gc;
+    private Evaluator evaluator;
+    //private static Interpreter INSTANCE;
 
-	//private static Interpreter INSTANCE;
-
-	public Interpreter(Context ctx) {
-		//ctx = new Context(this, factory);
-		this.ctx = ctx;
-
-		// gc = factory.createGC( ctx);
-		this.evaluator = new IterativeEvaluator(ctx);
+    public Interpreter(ComponentFactory factory) {
+        ctx = new Context(factory);
+        
+        gc = factory.createGC( ctx);
 
 		if (!LEXER_INITIALIZED) {
 			// TODO initLexerModule();

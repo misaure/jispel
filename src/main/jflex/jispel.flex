@@ -1,5 +1,7 @@
 package com.msaure.jispel.parser;
 
+import com.msaure.jispel.parser.Token;
+
 %%
 
 %public
@@ -12,13 +14,26 @@ package com.msaure.jispel.parser;
 %column
 
 %{
-  StringBuilder sb = new StringBuilder();
+  private Token currentToken;
 
-  private Symbol symbol(int type) {
-    return new Symbol(type, yyline, yycolumn);
+  private int token(Token.TokenType type) {
+    this.currentToken = Token.create()
+        .withTokenType(type)
+        .build();
+
+    return type.ordinal();
   }
-  private Symbol symbol(int type, Object value) {
-    return new Symbol(type, yyline, yycolumn, value);
+  private int token(Token.TokenType type, String value) {
+    this.currentToken = Token.create()
+        .withTokenType(type)
+        .withLexicalValue(value)
+        .build();
+
+    return type.ordinal();
+  }
+
+  public Token getCurrentToken() {
+    return this.currentToken;
   }
 %}
 
@@ -29,12 +44,12 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 %%
 
 <YYINITIAL> {
-  "("
-  ")"
-  "#f"
-  "#t"
+  "("                           { return token(Token.TokenType.LPAREN, yytext()); }
+  ")"                           { return token(Token.TokenType.RPAREN, yytext()); }
+  "#f"                          { return token(Token.TokenType.FALSE, yytext()); }
+  "#t"                          { return token(Token.TokenType.TRUE, yytext()); }
   "#("
-  [0-9][0-9]*                    { return m_SF.newSymbol("Integer", sym.INTEGER, new Integer(yytext())); }
-  [0-9][0-9]*\.?[0-9]*           { return m_SF.newSymbol("Double", sym.DOUBLE, new Double(yytext())); }
-  -[0-9][0-9]*\.?[0-9]*          { return m_SF.newSymbol("Double", sym.DOUBLE, new Double(yytext())); }
+  [0-9][0-9]*                    { return token(Token.TokenType.INT, yytext()); }
+  [0-9][0-9]*\.?[0-9]*           { return token(Token.TokenType.DOUBLE, yytext()); }
+  -[0-9][0-9]*\.?[0-9]*          { return token(Token.TokenType.DOUBLE, yytext()); }
 }

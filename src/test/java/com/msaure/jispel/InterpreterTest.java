@@ -21,7 +21,7 @@ public class InterpreterTest {
 
 	@Before
 	public void setUp() {
-		this.interp = new Interpreter(InterpreterFixture.simpleIterativeContext());
+		this.interp = new Interpreter(InterpreterFixture.defaultComponentFactory());
 		this.toplevel = new Environment();
 		this.current = new Environment();
 		this.nodeFactory = this.interp.getNodeFactory();

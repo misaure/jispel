@@ -131,9 +131,14 @@ public class Handle {
 
 	}
 
-	public boolean tagged() {
-		return 0 != this.refCount;
-	}
+    /**
+     * Checks whether the memory cell has been tagged during the last mark-and-sweep garbage collection run.
+     *
+     * @return {@code true} if the cell has been tagged.
+     */
+    public boolean tagged() {
+        return 0 != this.refCount;
+    }
 
 	/**
 	 * Creates a new binding environment which contains the bindings of the

@@ -7,7 +7,7 @@ import com.msaure.jispel.memory.NodeFactory;
 
 /**
  * This class defines the interface to factory objects which are used by
- * the Interpreter to create it's subcomponents. The ComponentFactory can
+ * the Interpreter to create it's sub components. The ComponentFactory can
  * be viewed as a kind of meta factory object, as most object created by
  * this factory are factory objects by themselves.
  */
