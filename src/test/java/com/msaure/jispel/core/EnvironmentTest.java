@@ -63,5 +63,21 @@ public class EnvironmentTest {
         assertNull(parent.lookup("childOnly"));
         assertNull(child.lookup("parentOnly"));
     }
+
+    @Test
+    public void thatClearRemovesAllEntries() {
+        final Environment env = new Environment();
+
+        env.put("a", IntegerHandle.valueOf(1));
+        env.put("b", IntegerHandle.valueOf(2));
+
+        assertTrue(env.exists("a"));
+        assertTrue(env.exists("b"));
+
+        env.clear();
+
+        assertFalse(env.exists("a"));
+        assertFalse(env.exists("b"));
+    }
 }
 

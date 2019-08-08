@@ -3,6 +3,7 @@ package com.msaure.jispel;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.msaure.jispel.core.Environment;
@@ -37,7 +38,8 @@ public class InterpreterTest {
 
 	}
 
-	@Test(expected = UndefinedValueException.class)
+	@Test
+	@Ignore("not implemented yet")
 	public void thatHelloWorldIsExecutedWithoutException() throws Exception {
 		// Create an s-expression manually and try to execute it
 		Handle argCons = nodeFactory.makeCons(nodeFactory.makeString("hello, world"));

@@ -15,8 +15,8 @@ public enum Constants {
 			return true;
 		}
 	}),
-	TRUE(BooleanHandle.valueOf(true)),
-	FALSE(BooleanHandle.valueOf(false));
+	TRUE(BooleanHandle.builder().withBooleanValue(true).build()),
+	FALSE(BooleanHandle.builder().withBooleanValue(false).build());
 
 	private Handle representation;
 

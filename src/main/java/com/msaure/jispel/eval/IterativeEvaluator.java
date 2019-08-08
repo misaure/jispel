@@ -1,6 +1,5 @@
 package com.msaure.jispel.eval;
 
-import com.msaure.jispel.commons.base.Check;
 import com.msaure.jispel.core.Environment;
 import com.msaure.jispel.core.RecoverableException;
 import com.msaure.jispel.interp.Context;
@@ -8,6 +7,7 @@ import com.msaure.jispel.memory.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Stack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +37,12 @@ public class IterativeEvaluator implements Evaluator {
     @Override
     public Handle eval( Handle node) throws RecoverableException, TypeException {
         if (node.hasType(Handle.NodeType.CONS)) {
-            //FIXME: why handle application of NIL?
+            // FIXME: why handle application of NIL?
             return (eq(node, Constants.NIL.asHandle()))? Constants.NIL.asHandle() : evalExpression(node);
             
         } else if (node.hasType(Handle.NodeType.SYMBOL)) {
             return evalVariable(node);
+
         }
         
         return node; // node evaluates to itself
@@ -59,14 +60,8 @@ public class IterativeEvaluator implements Evaluator {
      * @return Returns the result of the expression evaluation as a heap cell handle.
      */
     public Handle evalExpression(Handle node) throws TypeException, RecoverableException {
-        Check.notNull(node, "node");
+        Objects.requireNonNull(node, "node");
 
-//#if defined( DEBUG) && DEBUG > 2
-//  std::cerr << "SimpleEvaluator::evalExpression: ";
-//  printList( node, std::cerr);
-//  std::cerr << std::endl;
-//#endif
-//
         // The car cell of the first node either contains a lambda
         // expression or a symbol which refers to some executable node type.
         // In both cases the first node needs to be evaluated before application.
@@ -86,7 +81,7 @@ public class IterativeEvaluator implements Evaluator {
             }
 
         } else {
-    // Handle standard s-expression: evaluate arguments before calling
+            // Handle standard s-expression: evaluate arguments before calling
 
             // step 1: collect arguments
             final List<Handle> argsTmp = new ArrayList<>();   //std::vector<Handle_ptr> args;
@@ -101,10 +96,6 @@ public class IterativeEvaluator implements Evaluator {
 
             final Handle[] args = argsTmp.toArray(new Handle[argsTmp.size()]);
 
-            //}
-//    #if defined( DEBUG) && DEBUG > 2
-//        std::cerr << "collected " << args.size() << " arguments" << std::endl;
-//    #endif
             LOG.debug("collected {} arguments", Integer.valueOf(argsTmp.size()));
 
             // step 2: execute function with the arguments collected before
@@ -120,11 +111,6 @@ public class IterativeEvaluator implements Evaluator {
                 // a: push new binding environment and add arguments to it
                 pushEnvironment(expr.bindArguments(args));
 
-//#if defined( DEBUG) && DEBUG > 2
-//      std::cerr << "closure body: ";
-//      printList( expr->body(), std::cerr);
-//      std::cerr << std::endl;
-//#endif
                 // b: call eval on the closure's body
                 Handle retval = null;
 
@@ -134,6 +120,7 @@ public class IterativeEvaluator implements Evaluator {
 
                 popEnvironment();
 
+                assert retval != null;
       //MCAssert( 0 != retval, "invalid lambda application");
                 return retval;
 
