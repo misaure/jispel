@@ -24,7 +24,8 @@ public class SimpleNodeFactoryTest {
 	public void thatMakeNilReturnsEmptyConsHandle() {
 		Handle h = factory.makeNil();
 		assertNotNull(h);
-		assertTrue(h instanceof ConsHandle);
+		//assertTrue(h instanceof ConsHandle);
+		assertTrue(h.hasType(Handle.NodeType.CONS));
 	}
 
 	@Test
@@ -40,8 +41,8 @@ public class SimpleNodeFactoryTest {
 		ConsHandle h = factory.makeCons(IntegerHandle.valueOf(1));
 
 		assertThat(h).isNotNull();
-		assertThat(h.car()).isEqualTo(IntegerHandle.valueOf(1));
-		assertThat(h.cdr()).isEqualTo(Constants.NIL);
+		assertThat(h.car().integerValue()).isEqualTo(1);
+		assertThat(h.cdr()).isEqualTo(Constants.NIL.asHandle());
 	}
 
 	@Test

@@ -75,14 +75,15 @@ public class SimpleNodeFactory implements NodeFactory {
 	}
 
 	@Override
-	public ConsHandle makeCons(Handle car) throws TypeException {
+	public ConsHandle makeCons(Handle car) {
 		return ConsHandle.builder()
 				.withCar(car)
+				.withCdr(makeNil())
 				.build();
 	}
 
 	@Override
-	public ConsHandle makeCons(Handle car, Handle cdr) throws TypeException {
+	public ConsHandle makeCons(Handle car, Handle cdr) {
 		return ConsHandle.builder()
 				.withCar(car)
 				.withCdr(cdr)
