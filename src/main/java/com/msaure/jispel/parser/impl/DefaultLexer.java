@@ -6,6 +6,7 @@ import java.io.Reader;
 import com.msaure.jispel.parser.LexBuffer;
 import com.msaure.jispel.parser.Lexer;
 import com.msaure.jispel.parser.Token;
+import com.msaure.jispel.parser.TokenFactory;
 
 public class DefaultLexer implements Lexer {
 
@@ -17,32 +18,38 @@ public class DefaultLexer implements Lexer {
     public static final long CHARTYPE_LEND    = (1L << 6);
     public static final long CHARTYPE_QUOTE   = (1L << 7);
     public static final long CHARTYPE_WS      = (1L << 8);
-    public static final long CHARTYPE_COMMENT = (1L << 9);
-    public static final long CHARTYPE_NONID   = (1L << 10);
+    private static final long CHARTYPE_COMMENT = (1L << 9);
+    private static final long CHARTYPE_NONID   = (1L << 10);
     public static final long CHARTYPE_STRQUOT = (1L << 11);
-    public static final long CHARTYPE_OPCHAR  = (1L << 12);
-    public static final long CHARTYPE_RELOP   = (1L << 13);
+    private static final long CHARTYPE_OPCHAR  = (1L << 12);
+    private static final long CHARTYPE_RELOP   = (1L << 13);
     
     public static final char[] NON_ID_CHARACTERS = "()'\\\";".toCharArray();
     public static final char[] OPERATOR_CHARACTES = "+-*/".toCharArray();
     public static final char[] RELOP_CHARACTERS = "<>=".toCharArray();
     
-    public static final int EOF = -2;
-    public static final int EMPTY = -1;
+    private static final int EOF = -2;
+    private static final int EMPTY = -1;
     
-    public static final int LEXBUFFERSIZE = 1024;
+    private static final int LEXBUFFERSIZE = 1024;
     
-    public static enum LexerState {
+    public enum LexerState {
         INITIAL, SKIPWS, SPECIAL, ID, NUMBER, STRING, FLOAT, KEYWORD;
     }
     
     private final Reader is;
+    private final TokenFactory tokenFactory;
+
     private int putback = -1;
     private int lookahead = EMPTY;
     
     public DefaultLexer(Reader is) throws IOException {
+        this(is, new DefaultTokenFactory());
+    }
+
+    public DefaultLexer(Reader is, TokenFactory tokenFactory) {
         this.is = is;
-        //c = is.read();
+        this.tokenFactory = tokenFactory;
     }
     
     @Override
@@ -74,10 +81,10 @@ public class DefaultLexer implements Lexer {
                         break;
 
                     } else if ('(' == lookahead) {
-                        return Token.LPAREN;
+                        return tokenFactory.leftParenthesis();
 
                     } else if (')' == lookahead) {
-                        return Token.RPAREN;
+                        return tokenFactory.rightParenthesis();
 
                     } else if ('#' == lookahead) {
                         state = LexerState.SPECIAL;
@@ -135,11 +142,11 @@ public class DefaultLexer implements Lexer {
 
                     } else if ('f' == lookahead) {
                     	consume();
-                        return new Token(Token.TokenType.FALSE, buffer.toString());
+                        return tokenFactory.falseToken();
 
                     } else if ('t' == lookahead) {
                     	consume();
-                        return new Token(Token.TokenType.TRUE, buffer.toString());
+                        return tokenFactory.trueToken();
 
                     } else if ('!' == lookahead) {
                         skiptoeol(is);
@@ -155,7 +162,6 @@ public class DefaultLexer implements Lexer {
                             }
                             buffer.append((char) lookahead);
                         }
-                        //is.unget();
 
                         return new Token(Token.TokenType.CHARACTER, buffer.toString());
 
@@ -171,7 +177,8 @@ public class DefaultLexer implements Lexer {
                     	lookahead = nextChar();
                     	
                         if (is_chartype(lookahead, CHARTYPE_NONID) || isspace(lookahead) || eof(lookahead)) {
-                            return new Token(Token.TokenType.ID, buffer.toString());
+                            //return new Token(Token.TokenType.ID, buffer.toString());
+                            return tokenFactory.identifierToken(buffer.toString());
                         } else {
                         	buffer.append((char) lookahead);
                         	consume();
@@ -197,7 +204,6 @@ public class DefaultLexer implements Lexer {
                     return new Token(Token.TokenType.INT, buffer.toString());
 
                 case STRING:
-                    //c = is.read(); //is.get();				//skip leading quote character
                     while ('"' != lookahead) {
                         if (eof(lookahead)) {			// signal error on EOF
                             return new Token(Token.TokenType.ERROR, "end-of-file inside string");
@@ -227,7 +233,6 @@ public class DefaultLexer implements Lexer {
                                     break;
                             }
                         }
-                        //buffer.append(c);
                         lookahead = is.read(); //is.get();
                     }
 
@@ -235,9 +240,6 @@ public class DefaultLexer implements Lexer {
 
                 case FLOAT:
                     if (eof(lookahead) || !isdigit(lookahead)) {
-                        //is.unget();
-                        //buffer.unget();
-
                         return new Token(Token.TokenType.DOUBLE, buffer.toString());
                     }
                     break;
@@ -245,10 +247,8 @@ public class DefaultLexer implements Lexer {
                 case KEYWORD:
                 	lookahead = is.read(); //is.get();
                     while (isalnum(lookahead)) {
-                        //buffer.append(c);
                     	lookahead = is.read(); //is.get();
                     }
-                    //is.unget();
 
                     return new Token(Token.TokenType.KEYWORD, buffer.toString());
 
@@ -265,7 +265,7 @@ public class DefaultLexer implements Lexer {
         this.putback = (int) c;
     }
     
-    protected int nextChar() throws IOException {
+    private int nextChar() throws IOException {
     	if (EOF == this.lookahead) {
     		throw new IOException("attempt to read past end of file");
     	}
@@ -276,46 +276,46 @@ public class DefaultLexer implements Lexer {
     		if (-1 == c) {
     			this.lookahead = EOF;
     		} else {
-    			this.lookahead = (int) c;
+    			this.lookahead = c;
     		}
     	}
         
         return lookahead;
     }
     
-    protected void consume() {
+    private void consume() {
     	this.lookahead = EMPTY;
     }
-    
-    protected boolean eof(int c) {
+
+    private boolean eof(int c) {
         return EOF == c;
     }
     
     protected boolean empty(int c) {
     	return EMPTY == c;
     }
-    
-    protected void skiptoeol(Reader is) {
+
+    private void skiptoeol(Reader is) {
         
     }
-    
-    protected boolean isalpha(int c) {
+
+    private boolean isalpha(int c) {
         return Character.isLetter((char) c);
     }
-    
-    protected boolean isdigit(int c) {
+
+    private boolean isdigit(int c) {
         return Character.isDigit((char) c);
     }
-    
-    protected boolean isspace(int c) {
+
+    private boolean isspace(int c) {
         return Character.isSpaceChar((char) c);
     }
-    
-    protected boolean isalnum(int c) {
+
+    private boolean isalnum(int c) {
     	return Character.isLetter(c) || Character.isDigit(c);
     }
-    
-    protected boolean is_chartype(int c, long CHARTYPE_COMMENT) {
+
+    private boolean is_chartype(int c, long CHARTYPE_COMMENT) {
         return false; // FIXME: implement is_chartype
     }
 

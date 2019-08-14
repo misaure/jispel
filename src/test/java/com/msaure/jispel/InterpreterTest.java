@@ -1,7 +1,10 @@
 package com.msaure.jispel;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
+import com.msaure.jispel.memory.TypeException;
+import com.msaure.jispel.memory.type.IntegerHandle;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,8 +37,13 @@ public class InterpreterTest {
 	}
 
 	@Test
-	public void testEnvironmentHandling() {
+	public void testEnvironmentHandling() throws TypeException {
+		assertThat(interp.getToplevel()).isNotNull();
 
+		interp.toplevelDefine("my-variable", IntegerHandle.valueOf(1));
+		Handle h = interp.toplevelLookup("my-variable");
+
+		assertThat(h.integerValue()).isEqualTo(1);
 	}
 
 	@Test

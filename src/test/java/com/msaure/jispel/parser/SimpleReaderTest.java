@@ -1,11 +1,14 @@
 package com.msaure.jispel.parser;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
+import com.msaure.jispel.memory.SimpleNodeFactory;
+import com.msaure.jispel.memory.TypeException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,7 +18,6 @@ import com.msaure.jispel.memory.Handle;
 import com.msaure.jispel.memory.NodeFactory;
 import com.msaure.jispel.parser.impl.SimpleReader;
 
-@Ignore("pending feature")
 public class SimpleReaderTest {
     
     SimpleReader reader;
@@ -24,19 +26,20 @@ public class SimpleReaderTest {
     @Before
     public void setUp() {
         Context ctx = null;
-        NodeFactory factory = null;
+        NodeFactory factory = new SimpleNodeFactory();
         this.reader = new SimpleReader(ctx, factory);
         lexerMock = mock(Lexer.class);
     }
     
     @Test
-    public void thatAnIntegerIsParsedCorrectly() throws IOException {
+    public void thatAnIntegerIsParsedCorrectly() throws IOException, TypeException {
     	when(lexerMock.nextToken())
     		.thenReturn(new Token(Token.TokenType.INT, "1234"));
     	
-        Handle h = this.reader.read(lexerMock);
+        Handle h = this.reader.readAtom(lexerMock);
         
         assertNotNull(h);
+        assertThat(h.integerValue()).isEqualTo(1234);
     }
     
     @Test

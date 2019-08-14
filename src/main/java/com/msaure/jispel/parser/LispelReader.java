@@ -10,6 +10,10 @@ public interface LispelReader {
 		public ReadException(String msg) {
             super(msg);
         }
+
+        public ReadException(String message, Throwable t) {
+		    super(message, t);
+        }
     }
     
     Handle read(Lexer stream);

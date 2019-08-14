@@ -90,7 +90,7 @@ public class Interpreter {
 	 * @param value Can be any kind of valid memory cell.
 	 */
 	public void toplevelDefine( String name, Handle value) {
-
+		getToplevel().put(name, value);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class Interpreter {
      exists.
 	 */
 	public Handle toplevelLookup(String name) {
-		throw new UnsupportedOperationException("not implemented");
+		return getToplevel().lookup(name);
 	}
 
 	/**
@@ -119,6 +119,7 @@ public class Interpreter {
      0 if the operation failed.
 	 */
 	public Handle addBuiltin( String name, BuiltinValue cmdimpl) {
+		// getToplevel().put(cmdimpl);
 		throw new UnsupportedOperationException("not implemented");
 	}
 

@@ -8,8 +8,6 @@ package com.msaure.jispel.parser;
 public class Token {
     
     public static final Token EOF = token().withTokenType(TokenType.EOF).withLexicalValue("<EOF>").build();
-    public static final Token LPAREN = token().withTokenType(TokenType.LPAREN).withLexicalValue("(").build();
-    public static final Token RPAREN = token().withTokenType(TokenType.RPAREN).withLexicalValue(")").build();
     public static final Token QUOTE = token().withTokenType(TokenType.QUOTECHAR).withLexicalValue("'").build();
     public static final Token FALSE = token().withTokenType(TokenType.FALSE).withLexicalValue("#f").build();
     public static final Token TRUE = token().withTokenType(TokenType.TRUE).withLexicalValue("#t").build();
