@@ -1,4 +1,4 @@
-package com.msaure.jispel.parser;
+package com.msaure.jispel.parser.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
@@ -7,16 +7,17 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
+import com.msaure.jispel.InterpreterFixture;
 import com.msaure.jispel.memory.SimpleNodeFactory;
 import com.msaure.jispel.memory.TypeException;
+import com.msaure.jispel.parser.Lexer;
+import com.msaure.jispel.parser.Token;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.msaure.jispel.interp.Context;
 import com.msaure.jispel.memory.Handle;
 import com.msaure.jispel.memory.NodeFactory;
-import com.msaure.jispel.parser.impl.SimpleReader;
 
 public class SimpleReaderTest {
     
@@ -25,7 +26,7 @@ public class SimpleReaderTest {
     
     @Before
     public void setUp() {
-        Context ctx = null;
+        Context ctx = InterpreterFixture.simpleIterativeContext();
         NodeFactory factory = new SimpleNodeFactory();
         this.reader = new SimpleReader(ctx, factory);
         lexerMock = mock(Lexer.class);
@@ -60,6 +61,18 @@ public class SimpleReaderTest {
         Handle h = this.reader.read(lexerMock);
         
         assertNotNull(h);
+    }
+
+    @Test
+    public void thatIdentifierIsParsedCorrectly() throws IOException, TypeException {
+        when(lexerMock.nextToken())
+                .thenReturn(new Token(Token.TokenType.ID, "abc"));
+
+        Handle h = reader.read(lexerMock);
+
+        assertThat(h).isNotNull();
+        assertThat(h.hasType(Handle.NodeType.SYMBOL)).isTrue();
+        assertThat(h.stringValue()).isEqualTo("abc");
     }
 
 }

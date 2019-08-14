@@ -43,7 +43,7 @@ public class DefaultLexer implements Lexer {
     private int putback = -1;
     private int lookahead = EMPTY;
     
-    public DefaultLexer(Reader is) throws IOException {
+    public DefaultLexer(Reader is) {
         this(is, new DefaultTokenFactory());
     }
 

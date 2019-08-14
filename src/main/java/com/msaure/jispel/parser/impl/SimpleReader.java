@@ -7,6 +7,7 @@ import com.msaure.jispel.memory.type.IntegerHandle;
 import com.msaure.jispel.parser.Lexer;
 import com.msaure.jispel.parser.LispelReader;
 import com.msaure.jispel.parser.Token;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -30,7 +31,7 @@ public class SimpleReader implements LispelReader {
      * @param nodeFactory A NodeFactory instance which produces tagged memory
      * cells from tokens.
      */
-    public SimpleReader(Context ctx, NodeFactory nodeFactory) {
+    public SimpleReader(@NotNull  Context ctx, @NotNull NodeFactory nodeFactory) {
         this.ctx = ctx;
         this.nodeFactory = nodeFactory;
     }
@@ -73,12 +74,13 @@ public class SimpleReader implements LispelReader {
 
         switch (t.getTokennum()) {
             case INT:
-                //return IntegerHandle.valueOf(Integer.parseInt(currentToken.getLexval()));
                 return nodeFactory.makeInteger(Integer.valueOf(currentToken.getLexval()));
             case TRUE:
                 return nodeFactory.makeBoolean(true);
             case FALSE:
                 return nodeFactory.makeBoolean(false);
+            case ID:
+                return nodeFactory.makeSymbol(currentToken.getLexval());
         }
 
         // FIXME handle unprocessable token type
