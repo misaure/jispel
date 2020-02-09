@@ -6,6 +6,7 @@ import com.msaure.jispel.memory.Handle;
 import com.msaure.jispel.memory.SpecialValue;
 
 public class DefineCommand extends SpecialValue {
+
     @Override
     public Handle execute(Context ctx, Environment env, Handle args) {
         throw new UnsupportedOperationException("not implemented");

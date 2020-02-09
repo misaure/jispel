@@ -1,9 +1,11 @@
 package com.msaure.jispel.eval;
 
+import com.msaure.jispel.builtin.math.AddCommand;
 import com.msaure.jispel.core.Environment;
 import com.msaure.jispel.core.RecoverableException;
 import com.msaure.jispel.memory.TypeException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.msaure.jispel.InterpreterFixture;
@@ -13,6 +15,7 @@ import com.msaure.jispel.memory.SimpleNodeFactory;
 import com.msaure.jispel.memory.type.DoubleHandle;
 
 import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 public class IterativeEvaluatorTest {
 
@@ -22,7 +25,6 @@ public class IterativeEvaluatorTest {
 
 	@Before
 	public void setUp() {
-		// final Interpreter interp = InterpreterFixture.mockInterpreter();
 		this.ctx = InterpreterFixture.simpleIterativeContext();
 		this.evaluator = new IterativeEvaluator(ctx);
 		this.factory = new SimpleNodeFactory();
@@ -36,7 +38,7 @@ public class IterativeEvaluatorTest {
 	}
 
 	@Test
-	public void thatNilEvaluatesToSelf() throws RecoverableException, TypeException {
+	public void thatNilEvaluatesToSelf() throws Exception {
 		Handle result = evaluator.eval(factory.makeNil());
 
 		assertNotNull(result);
@@ -49,7 +51,25 @@ public class IterativeEvaluatorTest {
 
 		assertNotNull(result);
 		assertTrue(result.hasType(Handle.NodeType.INTEGER));
-		assertEquals(1, result.integerValue());
+		assertThat(result.integerValue()).isEqualTo(1);
+	}
+
+	@Test
+	public void thatFalseEvaluatesToSelf() throws RecoverableException, TypeException {
+		Handle result = evaluator.eval(factory.makeBoolean(false));
+
+		assertThat(result).isNotNull();
+		assertTrue(result.hasType(Handle.NodeType.BOOLEAN));
+		assertThat(result.booleanValue()).isEqualTo(false);
+	}
+
+	@Test
+	public void thatTrueEvaluatesToSelf() throws RecoverableException, TypeException {
+		Handle result = evaluator.eval(factory.makeBoolean(true));
+
+		assertThat(result).isNotNull();
+		assertTrue(result.hasType(Handle.NodeType.BOOLEAN));
+		assertThat(result.booleanValue()).isEqualTo(true);
 	}
 
 	@Test
@@ -64,5 +84,19 @@ public class IterativeEvaluatorTest {
 		assertNotNull(result);
 		assertTrue(result.hasType(Handle.NodeType.INTEGER));
 		assertEquals(42, result.integerValue());
+	}
+
+	@Test
+	@Ignore("pending feature")
+	public void test() throws Exception {
+		Environment globals = new Environment();
+		// globals.put("+", new AddCommand());
+
+		//evaluator.evalExpression(expr);
+	}
+
+	@Test(expected = RecoverableException.class)
+	public void test1() throws RecoverableException, TypeException {
+		evaluator.eval(null);
 	}
 }

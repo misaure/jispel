@@ -21,6 +21,11 @@ public class BooleanHandle extends Handle {
     }
 
     @Override
+    public boolean booleanValue() {
+        return boolValue;
+    }
+
+    @Override
     public String toString() {
         return boolValue? "#t" : "#f";
     }

@@ -15,8 +15,6 @@ import java.util.Set;
  * of scoping. Environments can be used to build hierachical structures
  * through parent links provided for each Environment instance.
  *
- * @version 0.3
- *
  * @since 0.0.1
  */
 public class Environment {

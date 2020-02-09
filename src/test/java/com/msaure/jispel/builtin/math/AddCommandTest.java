@@ -6,9 +6,11 @@ import com.msaure.jispel.core.RecoverableException;
 import com.msaure.jispel.interp.Context;
 import com.msaure.jispel.memory.Handle;
 import com.msaure.jispel.memory.TypeException;
+import com.msaure.jispel.memory.type.DoubleHandle;
 import com.msaure.jispel.memory.type.IntegerHandle;
 import org.junit.Before;
 import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
 
 import static org.junit.Assert.*;
 
@@ -64,4 +66,18 @@ public class AddCommandTest {
         assertEquals(7, result.integerValue());
     }
 
+    @Test
+    public void thatItAddsTwoDoubleValuesAndReturnsTheResultAsDouble() throws Exception {
+        Handle[] args = {
+                DoubleHandle.valueOf(4.0),
+                DoubleHandle.valueOf(2.0)
+        };
+
+        Handle result = cmd.execute(ctx, env, args);
+
+        assertThat(result.hasType(Handle.NodeType.DOUBLE))
+                .isTrue();
+        assertThat(result.doubleValue())
+                .isBetween(5.9999999, 6.00000001);
+    }
 }

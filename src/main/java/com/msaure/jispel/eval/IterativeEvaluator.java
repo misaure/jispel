@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
+
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +38,10 @@ public class IterativeEvaluator implements Evaluator {
      */
     @Override
     public Handle eval( Handle node) throws RecoverableException, TypeException {
+        if (node == null) {
+            throw new RecoverableException("cannot evaluate null handle");
+        }
+
         if (node.hasType(Handle.NodeType.CONS)) {
             // FIXME: why handle application of NIL?
             return (eq(node, Constants.NIL.asHandle()))? Constants.NIL.asHandle() : evalExpression(node);
@@ -59,7 +65,7 @@ public class IterativeEvaluator implements Evaluator {
      * 
      * @return Returns the result of the expression evaluation as a heap cell handle.
      */
-    public Handle evalExpression(Handle node) throws TypeException, RecoverableException {
+    public Handle evalExpression(@NotNull Handle node) throws TypeException, RecoverableException {
         Objects.requireNonNull(node, "node");
 
         // The car cell of the first node either contains a lambda

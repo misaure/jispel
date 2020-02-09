@@ -6,6 +6,7 @@ import com.msaure.jispel.interp.Context;
 import com.msaure.jispel.memory.BuiltinValue;
 import com.msaure.jispel.memory.Handle;
 import com.msaure.jispel.memory.TypeException;
+import com.msaure.jispel.memory.type.DoubleHandle;
 import com.msaure.jispel.memory.type.IntegerHandle;
 
 public class MultiplyCommand extends BuiltinValue {
@@ -17,7 +18,7 @@ public class MultiplyCommand extends BuiltinValue {
         }
 
         // 1. determine type to use for result
-        Handle.NodeType resultType = determineResultType(ctx, env, args);
+        Handle.NodeType resultType = Coercions.determineResultType(ctx, env, args);
 
         // 2. perform addition specific to result type
         switch(resultType) {
@@ -43,14 +44,17 @@ public class MultiplyCommand extends BuiltinValue {
     }
 
     private Handle multiplyDoubles(Context ctx, Environment env, Handle[] args) throws TypeException {
-        return null;
+        double result = 1.0;
+
+        for (Handle arg: args) {
+            result *= arg.doubleValue();
+        }
+
+        return DoubleHandle.valueOf(result);
     }
 
     private Handle multiplyArithmeticVectors(Context ctx, Environment env, Handle[] args) throws TypeException {
         return null;
     }
 
-    private Handle.NodeType determineResultType(Context ctx, Environment env, Handle[] args) {
-        return Handle.NodeType.INTEGER;
-    }
 }
