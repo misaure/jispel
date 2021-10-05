@@ -10,3 +10,6 @@ target/
 /bin/
 /.settings/
 /.projectKnowledge/
+/.classpath
+/.project
+
