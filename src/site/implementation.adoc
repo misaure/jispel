@@ -1,0 +1,4 @@
+* Interpretation by Tree Walking (SCM, initial Guile)
+* McCarthy Meta-Circular Interpreter
+* Bytecode Interpretation (Guile)
+* "Clojure Compilation" (U Montreal)

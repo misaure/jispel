@@ -12,4 +12,5 @@ target/
 /.projectKnowledge/
 /.classpath
 /.project
+/jispel.iml
 

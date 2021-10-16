@@ -41,6 +41,7 @@ public class SubtractCommand extends BuiltinValue {
             return IntegerHandle.valueOf(- args[0].integerValue());
         }
 
+        // FIXME add handling for double values (cf. SubtractCommandTest)
         int result = args[0].integerValue();
 
         for (int i=1; i<args.length; ++i) {
